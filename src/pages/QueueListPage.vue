@@ -39,6 +39,9 @@ import { ref, onMounted } from 'vue'
 import { Auth } from 'aws-amplify'
 import { ConnectClient, DescribeQueueCommand } from '@aws-sdk/client-connect'
 import getQueues from '../assets/GetQueues'
+import { useInstanceStore } from '../stores/instance'
+
+const instanceStore = useInstanceStore()
 
 const queues = ref([])
 const queueInfo = ref(null)
@@ -49,7 +52,7 @@ onMounted(() => {
     Auth.currentCredentials().then(async (credentials) => {
       // console.log('currentCredentials: ', credentials)
       creds.value = credentials
-      queues.value = await getQueues(process.env.INSTANCEID, credentials)
+      queues.value = await getQueues(credentials)
     })
   } catch (error) {
     console.log('Error retrieving credentials: ', error)
@@ -63,7 +66,7 @@ async function GetQueueInfo (queue) {
   })
 
   const input = { // ListQueuesRequest
-    InstanceId: process.env.INSTANCEID,
+    InstanceId: instanceStore.Id,
     QueueId: queue.Id
   }
 

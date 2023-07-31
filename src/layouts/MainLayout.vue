@@ -30,6 +30,16 @@
       <q-list>
         <q-item-label header class="text-center text-bold">Menu</q-item-label>
 
+        <q-item clickable :to="{ path: '/metrics'}">
+          <q-item-section avatar>
+            <q-icon color="blue" name="insights" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>RealTime Metrics</q-item-label>
+            <q-item-label caption>RealTime Metrics</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-item clickable :to="{ path: '/hoursofoperations'}">
           <q-item-section avatar>
             <q-icon color="blue" name="schedule" />
@@ -52,7 +62,7 @@
 
         <q-item clickable :to="{ path: '/listusers'}">
           <q-item-section avatar>
-            <q-icon color="blue" name="groups" />
+            <q-icon color="blue" name="groups_2" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Users</q-item-label>

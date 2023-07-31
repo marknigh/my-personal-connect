@@ -1,8 +1,10 @@
 import { ConnectClient, ListQueuesCommand } from '@aws-sdk/client-connect'
+import { useInstanceStore } from 'src/stores/instance'
+async function getQueues (credentials) {
+  const instanceStore = useInstanceStore()
 
-async function getQueues (instanceId, credentials) {
   const input = { // ListQueuesRequest
-    InstanceId: instanceId,
+    InstanceId: instanceStore.Id,
     QueueTypes: ['STANDARD']
   }
 

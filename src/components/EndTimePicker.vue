@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-sm row">
-      <q-input filled v-model="qInputFormat">
+      <q-input dense filled v-model="qInputFormat">
         <template v-slot:append>
           <q-icon name="access_time" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -19,26 +19,19 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps(['endTime', 'day'])
 const emit = defineEmits(['timeChange'])
-const qTimeFormat = ref('')
-// const qInputFormat = ref('')
-
-onMounted(() => {
-  formatTime()
-})
 
 // Amazon Connect sends hours and minutes in an object { Hours: x } where x < 10, as a single string. This function will add 0 in front of hours and minutes < 10 to provide a 2 digit string
-function formatTime () {
+const qTimeFormat = computed(() => {
   const hours = props.endTime.Hours < 10 ? '0' + props.endTime.Hours : props.endTime.Hours
   const minutes = props.endTime.Minutes < 10 ? '0' + props.endTime.Minutes : props.endTime.Minutes
-  qTimeFormat.value = hours + ':' + minutes
-}
+  return hours + ':' + minutes
+})
 
 const qInputFormat = computed(() => {
-  // debugger
   const justHour = qTimeFormat.value.slice(0, 2)
   // determine am/pm
   const suffix = justHour >= 12 ? ' pm' : ' am'

@@ -8,7 +8,8 @@ const routes = [
       { path: '/calendarview', component: () => import('pages/CalendarViewPage.vue') },
       { path: '/hoursofoperations', component: () => import('pages/HoursOfOperationsPage.vue') },
       { path: '/queues', component: () => import('pages/QueueListPage.vue') },
-      { path: '/listusers', component: () => import('pages/ListUsersPage.vue') }
+      { path: '/listusers', component: () => import('pages/ListUsersPage.vue') },
+      { path: '/metrics', component: () => import('pages/RealTimeMeticsPage.vue') }
     ]
   },
   { path: '/signin', component: () => import('src/pages/SignInPage.vue') },

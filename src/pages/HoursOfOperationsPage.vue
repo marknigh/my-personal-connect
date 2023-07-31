@@ -1,19 +1,17 @@
 <template>
   <q-page padding>
-    <div class="row q-gutter-xl">
-      <div class="col">
+    <div class="row q-gutter-md">
+      <div class="col-2">
         <q-select options-dense dense filled v-model="selectedHOO" :options="hoursOO" option-label="name" label="Hours of Operations" @update:model-value="getHOODetails()" />
       </div>
-      <!-- <div class="col">
-        <q-input disable filled dense outlined v-model="hoursOfOperation.Name" label="Name" />
-      </div> -->
-      <div class="col">
+      <div class="col-3">
         <q-input disable filled dense outlined v-model="hoursOfOperation.Description" label="Description" />
       </div>
-      <div class="col">
+      <div class="col-1">
         <q-input disable filled dense outlined v-model="hoursOfOperation.TimeZone" label="TimeZone" />
       </div>
     </div>
+    <q-separator v-if="hoursOfOperation.Config" spaced="xl" color="yellow" style="width: 55%"/>
       <template v-for="dayObject in hoursOfOperation.Config" :key="dayObject.Day">
         <div class="row">
           <div class="col-1 self-center">
@@ -27,8 +25,13 @@
             </div>
         </div>
       </template>
+      <q-separator v-if="hoursOfOperation.Config" spaced="xl" color="yellow" style="width: 55%"/>
       <template v-if="hoursOfOperation.Config">
-        <q-btn color="primary" icon="check" label="Submit" @click="Submit" />
+        <div class="row">
+          <div class="col-6 justify-end">
+            <q-btn color="primary" icon="check" label="Submit" @click="Submit" />
+          </div>
+        </div>
       </template>
   </q-page>
 </template>
@@ -39,6 +42,9 @@ import { Auth } from 'aws-amplify'
 import { ConnectClient, ListHoursOfOperationsCommand, DescribeHoursOfOperationCommand, UpdateHoursOfOperationCommand } from '@aws-sdk/client-connect'
 import StartTimePicker from '../components/StartTimePicker.vue'
 import EndTimePicker from '../components/EndTimePicker.vue'
+import { useInstanceStore } from '../stores/instance'
+
+const instanceStore = useInstanceStore()
 
 const hoursOO = ref([])
 const selectedHOO = ref(null)
@@ -78,7 +84,6 @@ async function timeChange (day, time, type) {
 }
 
 async function Submit () {
-  debugger
   const credentials = {
     accessKeyId: creds.value.accessKeyId,
     secretAccessKey: creds.value.secretAccessKey,
@@ -89,11 +94,11 @@ async function Submit () {
     region: 'us-east-1',
     credentials
   })
-  debugger
+
   const input = { // ListQueuesRequest
-    InstanceId: process.env.INSTANCEID,
+    InstanceId: instanceStore.Id,
     HoursOfOperationId: hoursOfOperation.value.HoursOfOperationId,
-    Config: [hoursOfOperation.value.Config]
+    Config: hoursOfOperation.value.Config
   }
 
   const command = new UpdateHoursOfOperationCommand(input)
@@ -117,9 +122,8 @@ async function getHOO () {
     region: 'us-east-1',
     credentials
   })
-  // debugger
   const input = {
-    InstanceId: process.env.INSTANCEID
+    InstanceId: instanceStore.Id
   }
 
   const command = new ListHoursOfOperationsCommand(input)
@@ -145,9 +149,9 @@ async function getHOODetails () {
     region: 'us-east-1',
     credentials
   })
-  // debugger
+
   const input = {
-    InstanceId: process.env.INSTANCEID,
+    InstanceId: instanceStore.Id,
     HoursOfOperationId: selectedHOO.value.id
   }
 

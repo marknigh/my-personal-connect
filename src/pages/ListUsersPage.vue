@@ -43,6 +43,9 @@
 import { ref, onMounted } from 'vue'
 import { Auth } from 'aws-amplify'
 import { ConnectClient, DescribeUserCommand, ListUsersCommand } from '@aws-sdk/client-connect'
+import { useInstanceStore } from '../stores/instance'
+
+const instanceStore = useInstanceStore()
 
 const creds = ref()
 const users = ref([])
@@ -71,9 +74,9 @@ async function GetUserList () {
     region: 'us-east-1',
     credentials
   })
-  // debugger
+
   const input = {
-    InstanceId: process.env.INSTANCEID
+    InstanceId: instanceStore.Id
   }
 
   const command = new ListUsersCommand(input)
@@ -99,9 +102,9 @@ async function GetUserDetails (user) {
     region: 'us-east-1',
     credentials
   })
-  // debugger
+
   const input = {
-    InstanceId: process.env.INSTANCEID,
+    InstanceId: instanceStore.Id,
     UserId: user.id
   }
 
@@ -111,7 +114,7 @@ async function GetUserDetails (user) {
     const response = await client.send(command)
     userDetails.value = response.User
   } catch (error) {
-    console.log('Error retrieving hours of operation list: ', error)
+    console.log('Error retrieving user list: ', error)
   }
 }
 </script>

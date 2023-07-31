@@ -54,3 +54,5 @@ amplifytools.xcconfig
 **.sample
 #amplify-do-not-edit-end
 # My additions to GitIgnore
+amplify-backup
+.env*
