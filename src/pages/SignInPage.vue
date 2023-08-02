@@ -5,7 +5,7 @@
             <q-card flat>
 
               <q-card-section>
-                <h4 class="text-center text-weight-thin">My Personal AWS Connect</h4>
+                <h4 class="text-center text-weight-thin">My Personal Amazon Connect</h4>
               </q-card-section>
 
               <q-card-section>
@@ -85,13 +85,13 @@
 <script setup>
 import { ref } from 'vue'
 import { Auth } from 'aws-amplify'
-// import { useUserStore } from 'stores/user'
+import { useUserStore } from 'stores/user'
 import GoogleLogin from 'components/GoogleLogin.vue'
 // import FacebookLogin from 'components/FacebookLogin.vue'
 import { useRouter } from 'vue-router'
 // import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 
-// const userStore = useUserStore()
+const userStore = useUserStore()
 // const router = useRouter()
 
 const username = ref('')
@@ -107,7 +107,7 @@ async function signIn () {
       cognitoUser.value = user
       verification.value = true
     }
-    console.log('user: ', user)
+    userStore.user = user
     router.push({ path: '/' })
   } catch (error) {
     console.log('error signing in', error)

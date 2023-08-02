@@ -2,20 +2,24 @@
   <q-layout>
     <q-page-container>
       <q-page class="flex flex-center">
-        <q-card flat>
+        <q-card class="my-card" flat>
           <q-card-section>
               <h4 class="text-center text-weight-thin">Register</h4>
           </q-card-section>
 
           <q-card-section>
-            <q-input
-              type="email"
-              label="Username"
-              v-model="username">
-                <template v-slot:before>
-                  <q-icon name="eva-person-outline" />
-                </template>
-            </q-input>
+            <div class="row">
+              <div class="col">
+                <q-input
+                  type="email"
+                  label="Username"
+                  v-model="username">
+                    <template v-slot:before>
+                      <q-icon name="eva-person-outline" />
+                    </template>
+                </q-input>
+              </div>
+            </div>
 
             <q-input
               type="password"
@@ -69,5 +73,8 @@ async function signUp () {
 
 </script>
 
-<style>
+<style lang="sass" scoped>
+.my-card
+  width: 50%
+  max-width: 350px
 </style>

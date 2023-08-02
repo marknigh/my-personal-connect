@@ -10,7 +10,7 @@
     </div>
     <div v-if="selectedQueue" class="row">
       <div v-for="met in metrics" :key="met.id" class="col">
-        <metric-cards :name="met.name" :value="met.value"/>
+        <metric-cards :name="met.name" :value="met.value" :unit="met.unit"/>
       </div>
     </div>
   </q-page>
@@ -114,9 +114,10 @@ async function GetMetrics () {
 
   try {
     const response = await client.send(command)
+    console.log('response: ', response)
     if (response.ApproximateTotalCount >= 1) {
       response.MetricResults[0].Collections.forEach((element) => {
-        metrics.value.push({ name: element.Metric.Name, value: element.Value })
+        metrics.value.push({ name: element.Metric.Name, value: element.Value, unit: element.Metric.Unit })
       })
     }
   } catch (error) {

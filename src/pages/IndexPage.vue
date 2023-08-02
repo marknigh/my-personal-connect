@@ -1,6 +1,5 @@
 <template>
   <div>
-
   </div>
 </template>
 
@@ -8,7 +7,9 @@
 import { Auth, Hub } from 'aws-amplify'
 import { useUserStore } from '../stores/user'
 import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const userStore = useUserStore()
 
 onMounted(() => {
@@ -27,7 +28,7 @@ onMounted(() => {
         break
       case 'signOut':
         console.log('signOut from Hub Listen')
-        userStore.$patch({})
+        router.push({ path: '/' })
         break
       case 'signIn_failure':
       case 'cognitoHostedUI_failure':

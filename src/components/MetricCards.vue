@@ -5,15 +5,31 @@
     >
       <q-card-section>
         <div class="text-h6">{{ props.name }}</div>
-        <div class="text-h2 text-center">{{ props.value }}</div>
+        <div class="text-h2 text-center">{{ displayValue }}</div>
       </q-card-section>
     </q-card>
   </div>
 </template>
 
 <script setup>
-const props = defineProps(['name', 'value', 'color'])
+import { computed } from 'vue'
+const props = defineProps(['name', 'value', 'unit'])
 
+const displayValue = computed(() => {
+  let value = ''
+  switch (props.unit) {
+    case 'SECONDS':
+      value = (props.value / 60)
+      break
+    case 'COUNT':
+      value = props.value
+      break
+    case 'PERCENT':
+      value = props.value + '%'
+      break
+  }
+  return value
+})
 </script>
 
 <style lang="sass" scoped>

@@ -11,5 +11,6 @@ export const useInstanceStore = defineStore('instance', {
   },
 
   actions: {
-  }
+  },
+  persist: SVGComponentTransferFunctionElement
 })
