@@ -23,10 +23,11 @@
       <q-list v-if="queueInfo">
         <q-item-section>
           <q-item-label>
-            <q-icon v-if="queueInfo.Queue.Status == 'ENABLED'" name="done" color="accent"></q-icon>
-            {{ queueInfo.Queue.Name }}
+            <q-icon v-if="queueInfo.Status == 'ENABLED'" name="check_circle" color="green"></q-icon>
+            {{ queueInfo.Name }}
           </q-item-label>
-          <q-item-label caption> {{ queueInfo.Queue.Description }}</q-item-label>
+          <q-item-label caption> {{ queueInfo.Description }}</q-item-label>
+          <q-item-label caption> <span class="text-bold">Hours Of Operations:</span> {{ hoursOfOperationName }}</q-item-label>
         </q-item-section>
       </q-list>
     </div>
@@ -37,7 +38,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { Auth } from 'aws-amplify'
-import { ConnectClient, DescribeQueueCommand } from '@aws-sdk/client-connect'
+import { ConnectClient, DescribeQueueCommand, DescribeHoursOfOperationCommand } from '@aws-sdk/client-connect'
 import getQueues from '../assets/GetQueues'
 import { useInstanceStore } from '../stores/instance'
 
@@ -46,11 +47,11 @@ const instanceStore = useInstanceStore()
 const queues = ref([])
 const queueInfo = ref(null)
 const creds = ref({})
+const hoursOfOperationName = ref(null)
 
 onMounted(() => {
   try {
     Auth.currentCredentials().then(async (credentials) => {
-      console.log('currentCredentials: ', credentials)
       creds.value = credentials
       queues.value = await getQueues(credentials)
     })
@@ -73,7 +74,21 @@ async function GetQueueInfo (queue) {
   const command = new DescribeQueueCommand(input)
 
   try {
-    queueInfo.value = await client.send(command)
+    const response = await client.send(command)
+    queueInfo.value = response.Queue
+    console.log(queueInfo.value.HoursOfOperationId)
+    try {
+      const input = { // ListQueuesRequest
+        InstanceId: instanceStore.Id,
+        HoursOfOperationId: queueInfo.value.HoursOfOperationId
+      }
+
+      const command = new DescribeHoursOfOperationCommand(input)
+      const response = await client.send(command)
+      hoursOfOperationName.value = response.HoursOfOperation.Name
+    } catch (error) {
+      console.log('Error retrieving HOO details: ', error)
+    }
   } catch (error) {
     console.log('Error retrieving queue list: ', error)
   }

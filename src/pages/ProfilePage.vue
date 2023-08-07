@@ -7,7 +7,12 @@
     </div>
     <div class="row">
       <div class="col-4">
-        <q-input readonly v-model="currentUser.attributes.name" type="text" label="Name" />
+        <q-input v-model="currentUser.attributes.given_name" type="text" label="First Name" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <q-input v-model="currentUser.attributes.family_name" type="text" label="Last Name" />
       </div>
     </div>
     <div class="row">
@@ -17,7 +22,7 @@
     </div>
     <div class="row">
       <div class="q-pt-md">
-        <q-btn color="primary" icon="check" label="OK" @click="Save()" />
+        <q-btn color="primary" icon="check" label="Submit" @click="Submit()" />
       </div>
     </div>
   </q-page>
@@ -39,8 +44,12 @@ onBeforeMount(() => {
   })
 })
 
-function Save () {
+async function Submit () {
   instanceStore.Id = instanceId.value
+  await Auth.updateUserAttributes(currentUser.value, {
+    family_name: currentUser.value.attributes.family_name,
+    given_name: currentUser.value.attributes.given_name
+  })
 }
 </script>
 

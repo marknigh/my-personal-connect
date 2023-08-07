@@ -15,6 +15,10 @@
           My Personal Amazon Connect
         </q-toolbar-title>
 
+        <div class="q-mr-md">
+          Hello, {{  userStore.user.attributes.given_name }}
+        </div>
+
         <div>
           <q-btn flat dense icon="logout" @click="SignOut()" />
         </div>
