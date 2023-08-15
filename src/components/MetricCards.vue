@@ -19,7 +19,7 @@ const displayValue = computed(() => {
   let value = ''
   switch (props.unit) {
     case 'SECONDS':
-      value = (props.value / 60)
+      value = Math.round((props.value / 1000))
       break
     case 'COUNT':
       value = props.value

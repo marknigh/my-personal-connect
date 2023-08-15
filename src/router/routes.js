@@ -13,7 +13,8 @@ const routes = [
       { path: '/hoursofoperations', component: () => import('pages/HoursOfOperationsPage.vue') },
       { path: '/queues', component: () => import('pages/QueueListPage.vue') },
       { path: '/listusers', component: () => import('pages/ListUsersPage.vue') },
-      { path: '/metrics', component: () => import('pages/RealTimeMeticsPage.vue') }
+      { path: '/metrics', component: () => import('pages/RealTimeMeticsPage.vue') },
+      { path: '/menucounts', component: () => import('pages/MenuNavigationCount.vue') }
     ]
   },
   { path: '/signin', component: () => import('src/pages/SignInPage.vue') },

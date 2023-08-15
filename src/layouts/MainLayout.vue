@@ -74,6 +74,16 @@
           </q-item-section>
         </q-item>
 
+        <q-item clickable :to="{ path: '/menucounts'}">
+          <q-item-section avatar>
+            <q-icon color="blue" name="groups_2" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Menu Counts</q-item-label>
+            <q-item-label caption>Menu Navigation Counts</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-item clickable :to="{ path: '/profile'}">
           <q-item-section avatar>
             <q-icon color="blue" name="person_outline" />
