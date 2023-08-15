@@ -6,6 +6,8 @@ This application written with the help of Quasar (Qusasar.dev) allows a user to 
 
 In this initial version, the instance ID is stored locally via the profile page and will need to be re-entered if logged out. Future version will allow persistent store of the Instance ID.
 
+Recently added and is customized for my instance only is the retrieving of the menu selection (1 or 2) of MenuOne of my demo instance. This was to demostrate Amazon Connect's ability to store user input in a DynamoDB and have this front-end appliation retrieve this data and display in tabular format.
+
 ## Install the dependencies
 ```bash
 yarn
@@ -16,21 +18,6 @@ npm install
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 ```bash
 quasar dev
-```
-
-
-### Lint the files
-```bash
-yarn lint
-# or
-npm run lint
-```
-
-
-
-### Build the app for production
-```bash
-quasar build
 ```
 
 ### Customize the configuration

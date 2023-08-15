@@ -74,9 +74,19 @@
           </q-item-section>
         </q-item>
 
+        <q-item clickable :to="{ path: '/routingprofiles'}">
+          <q-item-section avatar>
+            <q-icon color="blue" name="directions_bus" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Routing Profiles</q-item-label>
+            <q-item-label caption>List of Routing Profiles</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-item clickable :to="{ path: '/menucounts'}">
           <q-item-section avatar>
-            <q-icon color="blue" name="groups_2" />
+            <q-icon color="blue" name="numbers" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Menu Counts</q-item-label>

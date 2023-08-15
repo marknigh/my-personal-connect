@@ -1,11 +1,14 @@
 <template>
   <div class="q-pa-md">
     <q-table
+      flat
+      bordered
       title="Menu Selection"
       :rows="rows"
       :columns="columns"
       row-key="name"
       :loading="loading"
+      hide-no-data
     >
     <template v-slot:loading>
       <q-inner-loading showing color="primary" />
@@ -37,7 +40,7 @@ const columns = ref([
   {
     name: 'date',
     label: 'Date',
-    field: row => (date.formatDate(row.Date.S, 'MM-DD-YYYY')),
+    field: row => (date.formatDate(row.Date.S, 'MM-DD-YYYY HH:MM')),
     align: 'center'
   },
   {
@@ -48,10 +51,12 @@ const columns = ref([
 ])
 
 onBeforeMount(() => {
+  loading.value = true
   axios.get('https://lhh6i4nq87.execute-api.us-east-1.amazonaws.com/Prod/mpc/items').then((response) => {
     response.data.forEach((item) => {
       rows.value.push(item)
     })
+    loading.value = false
   }).catch((err) => {
     console.log(err)
   })
