@@ -21,22 +21,21 @@
       <q-separator spaced vertical color="black" style="height: 500px"/>
       <div class="col-5 row">
         <q-list v-if="routingProfileDetails">
-          <q-item-section>
-            <q-item-label>
-              {{ routingProfileDetails.Name }}
-            </q-item-label>
-            <q-item-label caption> {{ routingProfileDetails.Description }}</q-item-label>
-            <q-item-label> <span class="text-bold">Associated Queues:</span> {{ routingProfileDetails.NumberOfAssociatedQueues }}</q-item-label>
-            <q-item-label> <span class="text-bold">Associated Agents:</span> {{ routingProfileDetails.NumberOfAssociatedUsers }}</q-item-label>
-          </q-item-section>
-          <q-list v-for="media in routingProfileDetails.MediaConcurrencies" :key="media.id">
+          <q-item>
             <q-item-section>
               <q-item-label>
-                {{ media.Channel }} Max. Contacts Per Agent: {{ media.Concurrency }}
+                {{ routingProfileDetails.Name }}
               </q-item-label>
-              <q-item-label caption> </q-item-label>
+              <q-item-label caption> {{ routingProfileDetails.Description }}</q-item-label>
+              <q-item-label> <span class="text-bold">Associated Queues:</span> {{ routingProfileDetails.NumberOfAssociatedQueues }}</q-item-label>
+              <q-item-label> <span class="text-bold">Associated Agents:</span> {{ routingProfileDetails.NumberOfAssociatedUsers }}</q-item-label>
+              <template v-for="media in routingProfileDetails.MediaConcurrencies" :key="media.id">
+                <q-item-label>
+                  {{ media.Channel }} Max. Contacts Per Agent: {{ media.Concurrency }}
+                </q-item-label>
+              </template>
             </q-item-section>
-          </q-list>
+          </q-item>
         </q-list>
       </div>
     </div>

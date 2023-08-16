@@ -8,17 +8,4 @@ In this initial version, the instance ID is stored locally via the profile page 
 
 Recently added and is customized for my instance only is the retrieving of the menu selection (1 or 2) of MenuOne of my demo instance. This was to demostrate Amazon Connect's ability to store user input in a DynamoDB and have this front-end appliation retrieve this data and display in tabular format.
 
-## Install the dependencies
-```bash
-yarn
-# or
-npm install
-```
-
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
-
-### Customize the configuration
-See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
+Please reach out to me at marknigh70@gmail.com

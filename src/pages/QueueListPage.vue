@@ -27,7 +27,7 @@
             {{ queueInfo.Name }}
           </q-item-label>
           <q-item-label caption> {{ queueInfo.Description }}</q-item-label>
-          <q-item-label caption> <span class="text-bold">Hours Of Operations:</span> {{ hoursOfOperationName }}</q-item-label>
+          <q-item-label caption v-if="hoursOfOperation" @click="GetHOODetails"> <span class="text-bold">Hours Of Operations:</span> {{ hoursOfOperation.Name }}</q-item-label>
         </q-item-section>
       </q-list>
     </div>
@@ -47,7 +47,7 @@ const instanceStore = useInstanceStore()
 const queues = ref([])
 const queueInfo = ref(null)
 const creds = ref({})
-const hoursOfOperationName = ref(null)
+const hoursOfOperation = ref(null)
 
 onMounted(() => {
   try {
@@ -74,18 +74,17 @@ async function GetQueueInfo (queue) {
   const command = new DescribeQueueCommand(input)
 
   try {
-    const response = await client.send(command)
-    queueInfo.value = response.Queue
-    console.log(queueInfo.value.HoursOfOperationId)
+    const DescribeQueueResponse = await client.send(command)
+    queueInfo.value = DescribeQueueResponse.Queue
+
     try {
       const input = { // ListQueuesRequest
         InstanceId: instanceStore.Id,
         HoursOfOperationId: queueInfo.value.HoursOfOperationId
       }
-
       const command = new DescribeHoursOfOperationCommand(input)
-      const response = await client.send(command)
-      hoursOfOperationName.value = response.HoursOfOperation.Name
+      const DescribeHoursOfOperationResponse = await client.send(command)
+      hoursOfOperation.value = DescribeHoursOfOperationResponse.HoursOfOperation
     } catch (error) {
       console.log('Error retrieving HOO details: ', error)
     }
@@ -94,6 +93,9 @@ async function GetQueueInfo (queue) {
   }
 }
 
+function GetHOODetails () {
+  console.log('GetHOODetails')
+}
 </script>
 
 <style lang="scss" scoped>
