@@ -21,6 +21,7 @@
 import { onBeforeMount, ref } from 'vue'
 import axios from 'axios'
 import { date } from 'quasar'
+import { Auth } from 'aws-amplify'
 
 const loading = ref(false)
 const rows = ref([])
@@ -50,15 +51,24 @@ const columns = ref([
   }
 ])
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   loading.value = true
-  axios.get('https://lhh6i4nq87.execute-api.us-east-1.amazonaws.com/Prod/mpc/items').then((response) => {
+  const config = {
+    url: (process.env.DEV ? process.env.DEV_URL : process.env.PROD_URL) + '/mpc/items',
+    'X-Amz-Date': '',
+    maxBodyLength: Infinity,
+    headers: {
+      Authorization: `Bearer ${((await Auth.currentSession()).getIdToken().getJwtToken())}`
+    }
+  }
+  axios.request(config).then((response) => {
     response.data.forEach((item) => {
       rows.value.push(item)
     })
     loading.value = false
   }).catch((err) => {
     console.log(err)
+    loading.value = false
   })
 })
 
