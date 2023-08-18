@@ -1,25 +1,28 @@
 <template>
   <q-page padding>
-    <div class="fit row wrap justify-evenly items-center content-center">
-      <q-list separator>
-        <q-item-label header>Routing Profiles</q-item-label>
-        <q-item clickable v-ripple @click="GetRPDetails(rp)" v-for="rp in routingProfiles" :key="rp.Id">
-          <!-- <q-item-section avatar top>
-            <q-avatar icon="folder" :color="queue.QueueType = 'primary' ? 'primary' : 'accent'" text-color="white" />
-          </q-item-section> -->
+    <div class="fit row wrap justify-evenly">
+      <q-toolbar>
+        <q-toolbar-title>
+          Routing Profiles
+        </q-toolbar-title>
+      </q-toolbar>
+      <div style="min-width: 400px;">
+        <q-list separator>
+          <q-item clickable v-ripple @click="GetRPDetails(rp)" v-for="rp in routingProfiles" :key="rp.Id">
 
-          <q-item-section>
-            <q-item-label lines="1">{{ rp.name }}</q-item-label>
-            <!-- <q-item-label caption>{{ user.QueueType }}</q-item-label> -->
-          </q-item-section>
+            <q-item-section>
+              <q-item-label lines="1">{{ rp.name }}</q-item-label>
+              <!-- <q-item-label caption>{{ user.QueueType }}</q-item-label> -->
+            </q-item-section>
 
-          <q-item-section side>
-            <q-icon name="info" color="green" />
-          </q-item-section>
-        </q-item>
-      </q-list>
+            <q-item-section side>
+              <q-icon name="info" color="green" />
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
       <q-separator spaced vertical color="black" style="height: 500px"/>
-      <div class="col-5 row">
+      <div class="col-5 row items-center">
         <q-list v-if="routingProfileDetails">
           <q-item>
             <q-item-section>
@@ -57,7 +60,6 @@ const routingProfileDetails = ref(null)
 onMounted(() => {
   try {
     Auth.currentCredentials().then(async (credentials) => {
-      // console.log('currentCredentials: ', credentials)
       creds.value = credentials
       GetRoutingProfilesList()
     })

@@ -14,7 +14,7 @@
                   label="Username"
                   v-model="username">
                     <template v-slot:before>
-                      <q-icon name="eva-person-outline" />
+                      <q-icon name="o_account_circle" />
                     </template>
                 </q-input>
 
@@ -23,7 +23,7 @@
                   label="Password"
                   v-model="password">
                     <template v-slot:before>
-                      <q-icon name="eva-lock-outline" />
+                      <q-icon name="o_lock" />
                     </template>
                 </q-input>
 
@@ -87,27 +87,25 @@ import { ref } from 'vue'
 import { Auth } from 'aws-amplify'
 import { useUserStore } from 'stores/user'
 import GoogleLogin from 'components/GoogleLogin.vue'
-// import FacebookLogin from 'components/FacebookLogin.vue'
 import { useRouter } from 'vue-router'
-// import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 
 const userStore = useUserStore()
-// const router = useRouter()
+const router = useRouter()
 
 const username = ref('')
 const password = ref('')
 const verification = ref(false)
 const cognitoUser = ref({})
-const router = useRouter()
 
 async function signIn () {
   try {
     const user = await Auth.signIn(username.value, password.value)
+    console.log('SignInPage->user: ', user.attributes)
     if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
-      cognitoUser.value = user
+      cognitoUser.value = user.attributes
       verification.value = true
     }
-    userStore.user = user
+    userStore.user = user.attributes
     router.push({ path: '/' })
   } catch (error) {
     console.log('error signing in', error)

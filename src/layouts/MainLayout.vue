@@ -117,15 +117,19 @@
 import { useUserStore } from 'stores/user'
 import { ref } from 'vue'
 import { Auth } from 'aws-amplify'
+import { useRouter } from 'vue-router'
 
 const leftDrawerOpen = ref(false)
 
 const userStore = useUserStore()
+const router = useRouter()
 
 async function SignOut () {
   try {
-    userStore.user = {}
-    await Auth.signOut()
+    Auth.signOut().then(() => {
+      router.push('/signin')
+      userStore.user = {}
+    })
   } catch (error) {
     console.log('error signing out: ', error)
   }

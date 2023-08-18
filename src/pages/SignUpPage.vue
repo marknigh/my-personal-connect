@@ -15,7 +15,7 @@
                   label="Username"
                   v-model="username">
                     <template v-slot:before>
-                      <q-icon name="eva-person-outline" />
+                      <q-icon name="o_account_circle" />
                     </template>
                 </q-input>
               </div>
@@ -26,7 +26,18 @@
               label="Password"
               v-model="password">
                 <template v-slot:before>
-                  <q-icon name="eva-lock-outline" />
+                  <q-icon name="o_lock" />
+                </template>
+            </q-input>
+
+            <q-input
+              :rules="[value => password === value || 'Passwords must match']"
+              lazy-rules
+              type="password"
+              label="Confirm Password"
+              v-model="confirmedPassword">
+                <template v-slot:before>
+                  <q-icon name="o_confirmation_number" />
                 </template>
             </q-input>
 
@@ -48,6 +59,7 @@ import { useRouter } from 'vue-router'
 
 const username = ref('')
 const password = ref('')
+const confirmedPassword = ref('')
 const router = useRouter()
 import { useVertificationStore } from '../stores/vertification'
 

@@ -22,6 +22,9 @@
           <q-card-actions>
             <q-btn color="primary" class="full-width" label="Verify" @click="verify" />
           </q-card-actions>
+
+          <div class="text-center"> <q-btn flat @click="resendCode()">Resend Code?</q-btn></div>
+
         </q-card>
       </q-page>
     </q-page-container>
@@ -45,6 +48,14 @@ async function verify () {
     router.push('/')
   } catch (error) {
     console.log('error confirming sign up', error)
+  }
+}
+
+async function resendCode () {
+  try {
+    await Auth.resendSignUp(verificationStore.username)
+  } catch (err) {
+    console.log('error resending code: ', err)
   }
 }
 </script>

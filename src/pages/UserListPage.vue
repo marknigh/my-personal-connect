@@ -1,25 +1,31 @@
 <template>
   <q-page padding>
-    <div class="fit row wrap justify-evenly items-center content-center">
-      <q-list separator>
-        <q-item-label header>Users</q-item-label>
-        <q-item clickable v-ripple @click="GetUserDetails(user)" v-for="user in users" :key="user.Id">
-          <!-- <q-item-section avatar top>
-            <q-avatar icon="folder" :color="queue.QueueType = 'primary' ? 'primary' : 'accent'" text-color="white" />
-          </q-item-section> -->
+    <div class="fit row wrap justify-evenly">
+      <q-toolbar>
+        <q-toolbar-title>
+          Users
+        </q-toolbar-title>
+      </q-toolbar>
+      <div style="min-width: 400px;">
+        <q-scroll-area style="height: 500px;"
+          :thumb-style="thumbStyle"
+        >
+          <q-list separator>
+            <q-item clickable v-ripple @click="GetUserDetails(user)" v-for="user in users" :key="user.Id">
+              <q-item-section>
+                <q-item-label lines="1">{{ user.username }}</q-item-label>
+                <!-- <q-item-label caption>{{ user.QueueType }}</q-item-label> -->
+              </q-item-section>
 
-          <q-item-section>
-            <q-item-label lines="1">{{ user.username }}</q-item-label>
-            <!-- <q-item-label caption>{{ user.QueueType }}</q-item-label> -->
-          </q-item-section>
-
-          <q-item-section side>
-            <q-icon name="info" color="green" />
-          </q-item-section>
-        </q-item>
-      </q-list>
+              <q-item-section side>
+                <q-icon name="info" color="green" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
+      </div>
       <q-separator spaced vertical color="black" style="height: 500px"/>
-      <div class="col-5 row">
+      <div class="col-5 row items-center">
         <div v-if="userDetails">
           <p class="no-margin text-subtitle1 text-bold">
             <q-icon name="account_box" color="primary" size="16px"/>
@@ -50,6 +56,14 @@ const instanceStore = useInstanceStore()
 const creds = ref()
 const users = ref([])
 const userDetails = ref(null)
+
+const thumbStyle = ref({
+  right: '2px',
+  borderRadius: '5px',
+  backgroundColor: '#027be3',
+  width: '5px',
+  opacity: '0.75'
+})
 
 onMounted(() => {
   try {

@@ -51,7 +51,15 @@ const selectedHOO = ref(null)
 // const hoursOOInfo = ref({})
 const creds = ref({})
 // const nextToken = ref()
-
+const sorter = {
+  sunday: 0,
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6
+}
 const hoursOfOperation = ref({})
 
 onMounted(() => {
@@ -163,6 +171,12 @@ async function getHOODetails () {
   } catch (error) {
     console.log('Error retrieving hours of operation list: ', error)
   }
+  // sort hours00 array for Sunday to Saturday
+  hoursOfOperation.value.Config.sort((a, b) => {
+    const day1 = a.Day.toLowerCase()
+    const day2 = b.Day.toLowerCase()
+    return sorter[day1] - sorter[day2]
+  })
 }
 
 </script>

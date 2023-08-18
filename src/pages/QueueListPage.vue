@@ -1,36 +1,40 @@
 <template>
   <q-page padding>
-    <div class="fit row wrap justify-evenly items-center content-center">
-    <q-list separator>
-      <q-item-label header>Queues</q-item-label>
-      <q-item clickable v-ripple @click="GetQueueInfo(queue)" v-for="queue in queues" :key="queue.id">
-        <q-item-section avatar top>
-          <q-avatar icon="folder" :color="queue.QueueType = 'primary' ? 'primary' : 'accent'" text-color="white" />
-        </q-item-section>
+    <div class="fit row wrap justify-evenly">
+      <q-toolbar>
+        <q-toolbar-title shrink>
+          Queues
+        </q-toolbar-title>
+      </q-toolbar>
+      <div style="min-width: 400px;">
+        <q-list separator>
 
-        <q-item-section>
-          <q-item-label lines="1">{{ queue.Name }}</q-item-label>
-          <q-item-label caption>{{ queue.QueueType }}</q-item-label>
-        </q-item-section>
+          <q-item clickable v-ripple @click="GetQueueInfo(queue)" v-for="queue in queues" :key="queue.id">
 
-        <q-item-section side>
-          <q-icon name="info" color="green" />
-        </q-item-section>
-      </q-item>
-    </q-list>
-    <q-separator spaced vertical color="black" style="height: 500px"/>
-    <div class="col-5 row">
-      <q-list v-if="queueInfo">
-        <q-item-section>
-          <q-item-label>
-            <q-icon v-if="queueInfo.Status == 'ENABLED'" name="check_circle" color="green"></q-icon>
-            {{ queueInfo.Name }}
-          </q-item-label>
-          <q-item-label caption> {{ queueInfo.Description }}</q-item-label>
-          <q-item-label caption v-if="hoursOfOperation" @click="GetHOODetails"> <span class="text-bold">Hours Of Operations:</span> {{ hoursOfOperation.Name }}</q-item-label>
-        </q-item-section>
-      </q-list>
-    </div>
+            <q-item-section>
+              <q-item-label lines="1">{{ queue.Name }}</q-item-label>
+              <q-item-label caption>{{ queue.QueueType }}</q-item-label>
+            </q-item-section>
+
+            <q-item-section side>
+              <q-icon name="info" color="green" />
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
+      <q-separator spaced vertical color="black" style="height: 500px"/>
+      <div class="col-5 row items-center">
+        <q-list v-if="queueInfo">
+          <q-item-section>
+            <q-item-label>
+              <q-icon v-if="queueInfo.Status == 'ENABLED'" name="check_circle" color="green"></q-icon>
+              {{ queueInfo.Name }}
+            </q-item-label>
+            <q-item-label caption> {{ queueInfo.Description }}</q-item-label>
+            <q-item-label caption v-if="hoursOfOperation" @click="GetHOODetails"> <span class="text-bold">Hours Of Operations:</span> {{ hoursOfOperation.Name }}</q-item-label>
+          </q-item-section>
+        </q-list>
+      </div>
   </div>
   </q-page>
 </template>
