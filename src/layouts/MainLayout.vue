@@ -16,7 +16,7 @@
         </q-toolbar-title>
 
         <div class="q-mr-md">
-          Hello, {{  userStore.user.attributes.given_name }}
+          Hello<span v-if="userStore.user.attributes.given_name">, {{  userStore.user.attributes.given_name }} </span>
         </div>
 
         <div>
@@ -44,14 +44,39 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable :to="{ path: '/hoursofoperations'}">
+        <q-item clickable>
           <q-item-section avatar>
-            <q-icon color="blue" name="schedule" />
+            <q-icon color="blue" name="timelapse" />
           </q-item-section>
-          <q-item-section>
-            <q-item-label>Hours of Operations</q-item-label>
-            <q-item-label caption>View of Hours of Operations</q-item-label>
+
+          <q-item-section>Hours Of Operation</q-item-section>
+            <q-item-section side>
+              <q-icon name="keyboard_arrow_right" />
           </q-item-section>
+
+            <q-menu anchor="top right" self="top left">
+              <q-list>
+                <q-item clickable :to="{ path: '/hoursofoperations'}">
+                  <q-item-section avatar>
+                    <q-icon color="blue" name="schedule" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Hours of Operations - Connect</q-item-label>
+                    <q-item-label caption>View of Hours of Operations</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+                <q-item clickable :to="{ path: '/calendarview'}">
+                  <q-item-section avatar>
+                    <q-icon color="blue" name="calendar_month" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Calendar View</q-item-label>
+                    <q-item-label caption>Calendar View of Hours Open</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
         </q-item>
 
         <q-item clickable :to="{ path: '/queues'}">
@@ -91,16 +116,6 @@
           <q-item-section>
             <q-item-label>Menu Counts</q-item-label>
             <q-item-label caption>Menu Navigation Counts</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable :to="{ path: '/calendarview'}">
-          <q-item-section avatar>
-            <q-icon color="blue" name="calendar_month" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Calendar View</q-item-label>
-            <q-item-label caption>Calendar View of Hours Open</q-item-label>
           </q-item-section>
         </q-item>
 
