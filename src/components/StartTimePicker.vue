@@ -34,7 +34,7 @@ const qTimeFormat = computed(() => {
 const qInputFormat = computed(() => {
   const justHour = qTimeFormat.value.slice(0, 2)
   const suffix = justHour >= 12 ? ' pm' : ' am'
-  const h = justHour % 12
+  const h = (justHour % 12) || 12
   return (h + ':' + qTimeFormat.value.slice(3) + suffix)
 })
 

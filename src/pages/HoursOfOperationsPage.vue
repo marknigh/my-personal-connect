@@ -85,6 +85,7 @@ async function timeChange (day, time, type) {
       dayConfig.EndTime = { Hours: Number(formattedTime.hours), Minutes: Number(formattedTime.minutes) }
       break
     case 'start':
+      dayConfig.StartTime = { Hours: Number(formattedTime.hours), Minutes: Number(formattedTime.minutes) }
       break
     default:
       console.log('error on type')
@@ -171,7 +172,7 @@ async function getHOODetails () {
   } catch (error) {
     console.log('Error retrieving hours of operation list: ', error)
   }
-  // sort hours00 array for Sunday to Saturday
+  // sort hoursOfOperation.Config array for Sunday to Saturday
   hoursOfOperation.value.Config.sort((a, b) => {
     const day1 = a.Day.toLowerCase()
     const day2 = b.Day.toLowerCase()

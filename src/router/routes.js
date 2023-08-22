@@ -15,7 +15,9 @@ const routes = [
       { path: '/listusers', component: () => import('pages/UserListPage.vue') },
       { path: '/metrics', component: () => import('pages/RealTimeMeticsPage.vue') },
       { path: '/routingprofiles', component: () => import('pages/RoutingProfileListPage.vue') },
-      { path: '/menucounts', component: () => import('pages/MenuCountPage.vue') }
+      { path: '/menucounts', component: () => import('pages/MenuCountPage.vue') },
+      { path: '/calendarview', component: () => import('pages/CalendarViewPage.vue') }
+
     ]
   },
   { path: '/signin', component: () => import('src/pages/SignInPage.vue') },

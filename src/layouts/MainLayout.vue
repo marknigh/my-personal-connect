@@ -94,6 +94,16 @@
           </q-item-section>
         </q-item>
 
+        <q-item clickable :to="{ path: '/calendarview'}">
+          <q-item-section avatar>
+            <q-icon color="blue" name="calendar_month" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Calendar View</q-item-label>
+            <q-item-label caption>Calendar View of Hours Open</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-item clickable :to="{ path: '/profile'}">
           <q-item-section avatar>
             <q-icon color="blue" name="person_outline" />
@@ -115,7 +125,7 @@
 
 <script setup>
 import { useUserStore } from 'stores/user'
-import { ref } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { Auth } from 'aws-amplify'
 import { useRouter } from 'vue-router'
 
@@ -128,12 +138,15 @@ async function SignOut () {
   try {
     Auth.signOut().then(() => {
       router.push('/signin')
-      userStore.user = {}
     })
   } catch (error) {
     console.log('error signing out: ', error)
   }
 }
+
+onUnmounted(() => {
+  userStore.user = {}
+})
 </script>
 
 <style lang="scss" scoped>
