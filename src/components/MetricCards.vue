@@ -13,7 +13,18 @@
 
 <script setup>
 import { computed } from 'vue'
-const props = defineProps(['name', 'value', 'unit'])
+const props = defineProps({
+  name: {
+    type: String
+  },
+  value: {
+    type: Number,
+    default: 0
+  },
+  unit: {
+    type: String
+  }
+})
 
 const displayValue = computed(() => {
   let value = ''

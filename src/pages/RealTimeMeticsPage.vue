@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <div class="row q-gutter-xl">
-      <div class="col-2">
+      <div class="col-3">
         <q-select v-model="selectedQueue" label="Queue" :options="queues" option-label="Name" @update:model-value="queueDelayChange()"></q-select>
       </div>
       <div class="col-2">
@@ -71,7 +71,6 @@ function queueDelayChange () {
   metrics.value = []
   GetMetrics()
   timer.value = setInterval(() => {
-    console.log('GetMetrics')
     GetMetrics()
   }, selectedDelay.value.value)
 }
@@ -118,6 +117,22 @@ async function GetMetrics () {
     if (response.ApproximateTotalCount >= 1) {
       response.MetricResults[0].Collections.forEach((element) => {
         metrics.value.push({ name: element.Metric.Name, value: element.Value, unit: element.Metric.Unit })
+      })
+    } else {
+      metrics.value.push({
+        name: 'AGENTS_AVAILABLE',
+        unit: 'COUNT',
+        value: 0
+      },
+      {
+        name: 'CONTACTS_IN_QUEUE',
+        unit: 'COUNT',
+        value: 0
+      },
+      {
+        name: 'OLDEST_CONTACT_AGE',
+        unit: 'SECONDS',
+        value: 0
       })
     }
   } catch (error) {
