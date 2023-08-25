@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-sm">
     <div class="q-gutter-sm row">
       <q-input dense filled v-model="qInputFormat">
         <template v-slot:append>

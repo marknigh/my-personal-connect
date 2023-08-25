@@ -71,8 +71,18 @@
                     <q-icon color="blue" name="calendar_month" />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Calendar View</q-item-label>
+                    <q-item-label>Calendar View - Connect</q-item-label>
                     <q-item-label caption>Calendar View of Hours Open</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+                <q-item clickable :to="{ path: '/customschedules'}">
+                  <q-item-section avatar>
+                    <q-icon color="blue" name="calendar_month" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Custom Schedule</q-item-label>
+                    <q-item-label caption>Custom Schedule for your Queue</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>

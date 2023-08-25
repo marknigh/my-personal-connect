@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-sm">
     <div class="q-gutter-sm row">
       <q-input dense filled v-model="qInputFormat">
         <template v-slot:append>
@@ -7,7 +7,7 @@
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
               <q-time v-model="qTimeFormat" @update:model-value="timeChange">
                 <div class="row items-center justify-end">
-                  <q-btn v-close-popup label="Close" color="primary" flat />
+                  <q-btn v-close-popup label="close" color="primary" flat />
                 </div>
               </q-time>
             </q-popup-proxy>
