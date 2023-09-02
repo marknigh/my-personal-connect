@@ -9,7 +9,7 @@ const defaultSchedule = {
       entries: [
         {
           dowIndex: 0,
-          entryindex: 0,
+          entryIndex: 0,
           open: true,
           startTime: '08:00',
           endTime: '17:00'
@@ -22,7 +22,7 @@ const defaultSchedule = {
       entries: [
         {
           dowIndex: 1,
-          entryindex: 0,
+          entryIndex: 0,
           open: true,
           startTime: '08:00',
           endTime: '17:00'
@@ -35,7 +35,7 @@ const defaultSchedule = {
       entries: [
         {
           dowIndex: 2,
-          entryindex: 0,
+          entryIndex: 0,
           open: true,
           startTime: '08:00',
           endTime: '17:00'
@@ -48,7 +48,7 @@ const defaultSchedule = {
       entries: [
         {
           dowIndex: 3,
-          entryindex: 0,
+          entryIndex: 0,
           open: true,
           startTime: '08:00',
           endTime: '17:00'
@@ -61,7 +61,7 @@ const defaultSchedule = {
       entries: [
         {
           dowIndex: 4,
-          entryindex: 0,
+          entryIndex: 0,
           open: true,
           startTime: '08:00',
           endTime: '17:00'
@@ -74,7 +74,7 @@ const defaultSchedule = {
       entries: [
         {
           dowIndex: 5,
-          entryindex: 0,
+          entryIndex: 0,
           open: true,
           startTime: '08:00',
           endTime: '17:00'
@@ -87,7 +87,7 @@ const defaultSchedule = {
       entries: [
         {
           dowIndex: 6,
-          entryindex: 0,
+          entryIndex: 0,
           open: true,
           startTime: '08:00',
           endTime: '17:00'

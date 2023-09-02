@@ -5,30 +5,29 @@
         <q-select options-dense dense filled v-model="selectedHOO" :options="hoursOOList" option-label="name" label="Hours of Operations" @update:model-value="getHOODetails()" />
       </div>
     </div>
-   <div v-if="selectedHOO" class="row">
-      <div style="padding: 8px; display: flex; max-width: 1000px; width: 100%; height: 550px;">
-        <q-calendar-resource
-          ref="calendar"
-          v-model="selectedDate"
-          v-model:model-resources="resources"
-          resource-key="id"
-          resource-label="name"
-          :interval-start="6"
-          :interval-count="24"
-          animated
-          bordered
-        >
-          <template #resource-intervals="{ scope }">
-            <template v-for="(event, index) in getEvents(scope)" :key="index" >
-              <q-badge
-                color="primary"
-                :label="event.title"
-                :style="getStyle(event)"
-              />
-            </template>
+    <q-separator spaced="md" color="yellow" style="width: 90%"/>
+    <div v-if="selectedHOO" style="padding: 16px; display: flex; max-width: 1000px; width: 100%; height: 575px;">
+      <q-calendar-resource
+        ref="calendar"
+        v-model="selectedDate"
+        v-model:model-resources="resources"
+        resource-key="id"
+        resource-label="name"
+        :interval-start="6"
+        :interval-count="24"
+        animated
+        bordered
+      >
+        <template #resource-intervals="{ scope }">
+          <template v-for="(event, index) in getEvents(scope)" :key="index" >
+            <q-badge
+              color="primary"
+              :label="event.title"
+              :style="getStyle(event)"
+            />
           </template>
-        </q-calendar-resource>
-      </div>
+        </template>
+      </q-calendar-resource>
     </div>
   </q-page>
 </template>
@@ -44,7 +43,6 @@ import '@quasar/quasar-ui-qcalendar/src/QCalendarResource.sass'
 import DayOfWeekNumeric from '../assets/DayOfWeekNumeric'
 import CreateTimeString from '../assets/CreateTimeString'
 import CreateDurationTime from '../assets/CreateDurationTime'
-// import mockData from '../assets/mockData'
 import daysOfWeekNames from '../assets/DaysOfWeekNames'
 import { useInstanceStore } from '../stores/instance'
 

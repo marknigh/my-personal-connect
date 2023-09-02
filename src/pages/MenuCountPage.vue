@@ -52,6 +52,7 @@ const columns = ref([
 ])
 
 onBeforeMount(async () => {
+  // console.log((await Auth.currentSession()).getIdToken().getJwtToken())
   loading.value = true
   const config = {
     url: (process.env.DEV ? process.env.DEV_URL : process.env.PROD_URL) + '/mpc/items',
@@ -62,7 +63,8 @@ onBeforeMount(async () => {
     }
   }
   axios.request(config).then((response) => {
-    response.data.forEach((item) => {
+    console.log('response: ', response)
+    response.data.body.Items.forEach((item) => {
       rows.value.push(item)
     })
     loading.value = false

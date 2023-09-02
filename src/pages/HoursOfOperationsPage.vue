@@ -28,8 +28,11 @@
       <q-separator v-if="hoursOfOperation.Config" spaced="xl" color="yellow" style="width: 55%"/>
       <template v-if="hoursOfOperation.Config">
         <div class="row">
-          <div class="col-6 justify-end">
-            <q-btn color="primary" icon="check" label="Submit" @click="Submit" />
+          <div class="col-1">
+            <q-btn color="primary" label="Submit" @click="Submit" />
+          </div>
+          <div class="col-1">
+            <q-btn color="red" label="Cancel" @click="Cancel" />
           </div>
         </div>
       </template>
@@ -38,19 +41,19 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { Auth } from 'aws-amplify'
 import { ConnectClient, ListHoursOfOperationsCommand, DescribeHoursOfOperationCommand, UpdateHoursOfOperationCommand } from '@aws-sdk/client-connect'
 import StartTimePicker from '../components/StartTimePicker.vue'
 import EndTimePicker from '../components/EndTimePicker.vue'
 import { useInstanceStore } from '../stores/instance'
 
+const router = useRouter()
 const instanceStore = useInstanceStore()
 
 const hoursOO = ref([])
 const selectedHOO = ref(null)
-// const hoursOOInfo = ref({})
 const creds = ref({})
-// const nextToken = ref()
 const sorter = {
   sunday: 0,
   monday: 1,
@@ -65,7 +68,6 @@ const hoursOfOperation = ref({})
 onMounted(() => {
   try {
     Auth.currentCredentials().then(async (credentials) => {
-      // console.log('currentCredentials: ', credentials)
       creds.value = credentials
       getHOO()
     })
@@ -180,6 +182,9 @@ async function getHOODetails () {
   })
 }
 
+function Cancel () {
+  router.push('/')
+}
 </script>
 
 <style lang="scss" scoped>

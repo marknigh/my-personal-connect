@@ -2,36 +2,6 @@ const mockData = [
   {
     Day: 'THURSDAY',
     StartTime: {
-      Hours: 9,
-      Minutes: 0
-    },
-    EndTime: {
-      Hours: 17,
-      Minutes: 0
-    },
-    dow: 4,
-    duration: 480,
-    start: '09:00',
-    type: 'open'
-  },
-  {
-    Day: 'THURSDAY',
-    StartTime: {
-      Hours: 15,
-      Minutes: 0
-    },
-    EndTime: {
-      Hours: 24,
-      Minutes: 0
-    },
-    dow: 4,
-    duration: 540,
-    start: '15:00',
-    type: 'closed'
-  },
-  {
-    Day: 'THURSDAY',
-    StartTime: {
       Hours: 6,
       Minutes: 0
     },

@@ -22,7 +22,7 @@
     </div>
     <div class="row">
       <div class="q-pt-md">
-        <q-btn color="primary" icon="check" label="Submit" @click="Submit()" />
+        <q-btn color="primary" label="Submit" @click="Submit()" />
       </div>
     </div>
   </q-page>

@@ -18,7 +18,7 @@ const routes = [
       { path: '/menucounts', component: () => import('pages/MenuCountPage.vue') },
       { path: '/calendarview', component: () => import('pages/CalendarViewPage.vue') },
       { path: '/customschedules', component: () => import('pages/CustomScheduleListPage.vue') },
-      { path: '/newschedule', component: () => import('pages/NewCustomSchedulePage.vue') }
+      { path: '/customschedule/:schedule?', name: 'schedule', component: () => import('pages/CustomSchedulePage.vue') }
     ]
   },
   { path: '/signin', component: () => import('src/pages/SignInPage.vue') },
