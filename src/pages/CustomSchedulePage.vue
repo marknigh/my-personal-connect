@@ -14,9 +14,10 @@
         <div class="col">
           <q-input filled dense outlined v-model="schedule.description" label="Description" />
         </div>
-        <div class="col">
+        <!-- Implement TimeZone funcationality at a later date.  -->
+        <!-- <div class="col">
           <q-input filled dense outlined v-model="schedule.timezone" label="TimeZone" />
-        </div>
+        </div> -->
       </div>
       <q-separator spaced="md" color="yellow" style="width: 100%"/>
       <template v-for="(dow, index) in schedule.config" :key="index">
@@ -74,6 +75,7 @@ function DeleteSchedule () {
     console.log('>>>> OK, received', data)
   })
 }
+
 function Cancel () {
   // clear out the schedule
   schedule.value = {}
@@ -148,8 +150,8 @@ function addEntry (dowIndex) {
 }
 
 function findHighestIndex (dowElement) {
-  console.log(dowElement.entries)
-  return Math.max(...dowElement.entries.map(o => o.entryIndex))
+  const justEntryIndexes = dowElement.entries.map((element) => { return element.entryIndex })
+  return Math.max(...justEntryIndexes)
 }
 
 async function submitSchedule () {

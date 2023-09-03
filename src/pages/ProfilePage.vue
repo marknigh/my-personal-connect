@@ -22,7 +22,7 @@
     </div>
     <div class="row">
       <div class="q-pt-md">
-        <q-btn color="primary" label="Submit" @click="Submit()" />
+        <q-btn color="primary" label="Save" @click="Save()" />
       </div>
     </div>
   </q-page>
@@ -44,7 +44,7 @@ onBeforeMount(() => {
   })
 })
 
-async function Submit () {
+async function Save () {
   instanceStore.Id = instanceId.value
   await Auth.updateUserAttributes(currentUser.value, {
     family_name: currentUser.value.attributes.family_name,

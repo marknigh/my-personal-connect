@@ -2,7 +2,6 @@
   <div class="q-pa-md">
     <q-table
       flat
-      bordered
       title="Menu Selection"
       :rows="rows"
       :columns="columns"
@@ -10,9 +9,9 @@
       :loading="loading"
       hide-no-data
     >
-    <template v-slot:loading>
-      <q-inner-loading showing color="primary" />
-    </template>
+      <template v-slot:loading>
+        <q-inner-loading showing color="primary" />
+      </template>
     </q-table>
   </div>
 </template>
@@ -56,8 +55,6 @@ onBeforeMount(async () => {
   loading.value = true
   const config = {
     url: (process.env.DEV ? process.env.DEV_URL : process.env.PROD_URL) + '/mpc/items',
-    'X-Amz-Date': '',
-    maxBodyLength: Infinity,
     headers: {
       Authorization: `Bearer ${((await Auth.currentSession()).getIdToken().getJwtToken())}`
     }
