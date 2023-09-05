@@ -11,7 +11,7 @@
           :thumb-style="thumbStyle"
         >
           <q-list separator>
-            <q-item clickable v-ripple @click="GetUserDetails(user)" v-for="user in users" :key="user.Id">
+            <q-item clickable v-ripple @click="GetUserDetails(user.id)" v-for="user in users" :key="user.Id">
               <q-item-section>
                 <q-item-label lines="1">{{ user.username }}</q-item-label>
                 <!-- <q-item-label caption>{{ user.QueueType }}</q-item-label> -->
@@ -27,18 +27,23 @@
       <q-separator spaced vertical color="black" style="height: 500px"/>
       <div class="col-5 row items-center">
         <div v-if="userDetails">
-          <p class="no-margin text-subtitle1 text-bold">
-            <q-icon name="account_box" color="primary" size="16px"/>
+          <p class="no-margin text-h5 text-bold">
+            <q-icon size="sm" name="face" color="primary" />
             {{ userDetails.IdentityInfo.FirstName }} {{ userDetails.IdentityInfo.LastName }}
           </p>
-          <p class="no-margin text-body2">
-            <q-icon name="email" color="secondary" size="16px"/>
+          <p class="no-margin text-subtitle1">
+            <q-icon size="sm" name="account_box" color="secondary" />
             {{ userDetails.IdentityInfo.Email }}
           </p>
-          <p class="no-margin text-body2">
-            <q-icon name="phone" color="accent" size="16px"/>
+          <p class="no-margin text-subtitle1">
+            <q-icon size="sm" name="phone" color="accent"/>
             {{ userDetails.PhoneConfig.PhoneType }}
           <span v-if="userDetails.PhoneConfig.PhoneType == 'DESK_PHONE'">, {{ userDetails.PhoneConfig.DeskPhoneNumber }}</span></p>
+          <user-routing-profile
+            :routingProfileId="userDetails.RoutingProfileId"
+            :creds="creds"
+            @change-routing-profile="ChangeRoutingProfile"
+          />
         </div>
       </div>
     </div>
@@ -48,8 +53,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { Auth } from 'aws-amplify'
-import { ConnectClient, DescribeUserCommand, ListUsersCommand } from '@aws-sdk/client-connect'
+import { ConnectClient, DescribeUserCommand, ListUsersCommand, UpdateUserRoutingProfileCommand } from '@aws-sdk/client-connect'
 import { useInstanceStore } from '../stores/instance'
+import UserRoutingProfile from '../components/UserRoutingProfile.vue'
 
 const instanceStore = useInstanceStore()
 
@@ -105,7 +111,8 @@ async function GetUserList () {
   }
 }
 
-async function GetUserDetails (user) {
+async function GetUserDetails (iD) {
+  userDetails.value = null
   const credentials = {
     accessKeyId: creds.value.accessKeyId,
     secretAccessKey: creds.value.secretAccessKey,
@@ -119,18 +126,51 @@ async function GetUserDetails (user) {
 
   const input = {
     InstanceId: instanceStore.Id,
-    UserId: user.id
+    UserId: iD
   }
 
   const command = new DescribeUserCommand(input)
 
   try {
     const response = await client.send(command)
+    console.log('DescribeUserCommand => response: ', response)
     userDetails.value = response.User
   } catch (error) {
     console.log('Error retrieving user list: ', error)
   }
 }
+
+async function ChangeRoutingProfile (iD) {
+  const credentials = {
+    accessKeyId: creds.value.accessKeyId,
+    secretAccessKey: creds.value.secretAccessKey,
+    sessionToken: creds.value.sessionToken
+  }
+
+  const client = new ConnectClient({
+    region: 'us-east-1',
+    credentials
+  })
+
+  const input = {
+    RoutingProfileId: iD.value,
+    InstanceId: instanceStore.Id,
+    UserId: userDetails.value.Id
+  }
+
+  const command = new UpdateUserRoutingProfileCommand(input)
+
+  try {
+    const response = await client.send(command)
+    console.log(response)
+    if (response.$metadata.httpStatusCode === 200) {
+      GetUserDetails(userDetails.value.Id)
+    }
+  } catch (error) {
+    console.log('Error retrieving user list: ', error)
+  }
+}
+
 </script>
 
 <style lang="scss" scoped>

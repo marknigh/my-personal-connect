@@ -24,16 +24,25 @@
       </div>
       <q-separator spaced vertical color="black" style="height: 500px"/>
       <div class="col-5 row items-center">
-        <q-list v-if="queueInfo">
-          <q-item-section>
-            <q-item-label>
-              <q-icon v-if="queueInfo.Status == 'ENABLED'" name="check_circle" color="green"></q-icon>
-              {{ queueInfo.Name }}
-            </q-item-label>
-            <q-item-label caption> {{ queueInfo.Description }}</q-item-label>
-            <q-item-label caption v-if="hoursOfOperation" @click="GetHOODetails"> <span class="text-bold">Hours Of Operations:</span> {{ hoursOfOperation.Name }}</q-item-label>
-          </q-item-section>
-        </q-list>
+        <div v-if="queueInfo">
+          <p class="no-margin text-h5 text-bold">
+            <q-icon
+              :name="queueInfo.Status === 'ENABLED' ? 'check_circle' : 'cancel'"
+              :color="queueInfo.Status === 'ENABLED' ? 'green' : 'red'"
+            >
+            </q-icon>
+            {{ queueInfo.Name }}
+          </p>
+          <p class="no-margin text-body2">
+            {{ queueInfo.Description }}
+          </p>
+          <p class="no-margin text-subtitle1">
+            <span class="text-bold">
+              Hours of Operations:
+            </span>
+              {{ hoursOfOperation.Name }}
+          </p>
+        </div>
       </div>
   </div>
   </q-page>
@@ -70,7 +79,7 @@ async function GetQueueInfo (queue) {
     credentials: creds.value
   })
 
-  const input = { // ListQueuesRequest
+  const input = {
     InstanceId: instanceStore.Id,
     QueueId: queue.Id
   }
@@ -79,10 +88,11 @@ async function GetQueueInfo (queue) {
 
   try {
     const DescribeQueueResponse = await client.send(command)
+    console.log(DescribeQueueResponse)
     queueInfo.value = DescribeQueueResponse.Queue
 
     try {
-      const input = { // ListQueuesRequest
+      const input = { // Get Specific Details on Hours of Operations Assigned to Queue
         InstanceId: instanceStore.Id,
         HoursOfOperationId: queueInfo.value.HoursOfOperationId
       }
@@ -97,9 +107,6 @@ async function GetQueueInfo (queue) {
   }
 }
 
-function GetHOODetails () {
-  console.log('GetHOODetails')
-}
 </script>
 
 <style lang="scss" scoped>

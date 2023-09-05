@@ -28,10 +28,10 @@
       <q-separator v-if="hoursOfOperation.Config" spaced="xl" color="yellow" style="width: 55%"/>
       <template v-if="hoursOfOperation.Config">
         <div class="row">
-          <div class="col-1">
+          <div class="q-mr-md">
             <q-btn color="primary" label="Submit" @click="Submit" />
           </div>
-          <div class="col-1">
+          <div class="q-mr-md">
             <q-btn color="red" label="Cancel" @click="Cancel" />
           </div>
         </div>
