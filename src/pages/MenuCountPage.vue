@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <q-table
       flat
-      title="Menu Selection"
+      title="Menu Selection (+1 619-821-6184)"
       :rows="rows"
       :columns="columns"
       row-key="name"

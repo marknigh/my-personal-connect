@@ -23,23 +23,31 @@
       </div>
       <q-separator spaced vertical color="black" style="height: 500px"/>
       <div class="col-5 row items-center">
-        <q-list v-if="routingProfileDetails">
-          <q-item>
-            <q-item-section>
-              <q-item-label>
-                {{ routingProfileDetails.Name }}
-              </q-item-label>
-              <q-item-label caption> {{ routingProfileDetails.Description }}</q-item-label>
-              <q-item-label> <span class="text-bold">Associated Queues:</span> {{ routingProfileDetails.NumberOfAssociatedQueues }}</q-item-label>
-              <q-item-label> <span class="text-bold">Associated Agents:</span> {{ routingProfileDetails.NumberOfAssociatedUsers }}</q-item-label>
-              <template v-for="media in routingProfileDetails.MediaConcurrencies" :key="media.id">
-                <q-item-label>
-                  {{ media.Channel }} Max. Contacts Per Agent: {{ media.Concurrency }}
-                </q-item-label>
-              </template>
-            </q-item-section>
-          </q-item>
-        </q-list>
+        <div v-if="routingProfileDetails">
+          <p class="no-margin text-h5 text-bold">
+            {{ routingProfileDetails.Name }}
+          </p>
+          <p class="no-margin text-body2">
+            {{ routingProfileDetails.Description }}
+          </p>
+          <p class="no-margin text-body1">
+            <span class="text-bold">Associated Queues:</span>
+            {{ routingProfileDetails.NumberOfAssociatedQueues }}
+            <q-icon name="expand_more" @click="ViewAssociateQueues"/>
+              <RoutingProfileAssociatedQueues v-if="viewQueues" :creds="creds" :routingProfileId="routingProfileDetails.RoutingProfileId"/>
+          </p>
+          <p class="no-margin text-body1">
+            <span class="text-bold">Associated Agents:</span>
+            {{ routingProfileDetails.NumberOfAssociatedUsers }}
+          </p>
+
+          <template v-for="media in routingProfileDetails.MediaConcurrencies" :key="media.id">
+            <q-item-label>
+              {{ media.Channel }} Max. Contacts Per Agent: {{ media.Concurrency }}
+            </q-item-label>
+          </template>
+
+        </div>
       </div>
     </div>
   </q-page>
@@ -50,12 +58,14 @@ import { ref, onMounted } from 'vue'
 import { Auth } from 'aws-amplify'
 import { ConnectClient, ListRoutingProfilesCommand, DescribeRoutingProfileCommand } from '@aws-sdk/client-connect'
 import { useInstanceStore } from '../stores/instance'
+import RoutingProfileAssociatedQueues from '../components/RoutingProfileAssociatedQueues.vue'
 
 const instanceStore = useInstanceStore()
 
 const creds = ref()
 const routingProfiles = ref([])
 const routingProfileDetails = ref(null)
+const viewQueues = ref(false)
 
 onMounted(() => {
   try {
@@ -121,6 +131,10 @@ async function GetRPDetails (routingProfile) {
   } catch (error) {
     console.log('Error retrieving user list: ', error)
   }
+}
+
+function ViewAssociateQueues () {
+  viewQueues.value = !viewQueues.value
 }
 </script>
 

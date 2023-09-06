@@ -40,7 +40,7 @@
             <span class="text-bold">
               Hours of Operations:
             </span>
-              {{ hoursOfOperation.Name }}
+            {{ hoursOfOperation.Name }}
           </p>
         </div>
       </div>
