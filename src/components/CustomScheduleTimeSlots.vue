@@ -14,7 +14,6 @@
           @remove-entry="RemoveEntry"
         >
         <template #openslot>
-            {{ entry.entryIndex }} {{  entry.dowIndex }}
             <q-checkbox v-model="entry.open" checked-icon="meeting_room" unchecked-icon="door_front" @update:model-value="EntryChange(entry)"/>
           </template>
 

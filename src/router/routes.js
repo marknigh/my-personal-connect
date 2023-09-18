@@ -18,12 +18,15 @@ const routes = [
       { path: '/menucounts', component: () => import('pages/MenuCountPage.vue') },
       { path: '/calendarview', component: () => import('pages/CalendarViewPage.vue') },
       { path: '/customschedules', component: () => import('pages/CustomScheduleListPage.vue') },
-      { path: '/customschedule/:schedule?', name: 'schedule', component: () => import('pages/CustomSchedulePage.vue') }
+      { path: '/customschedule/:schedule?', name: 'schedule', component: () => import('pages/CustomSchedulePage.vue') },
+      { path: '/contactflows', component: () => import('pages/ContactFlowListPage.vue') },
+      { path: '/contactflow/:id', name: 'contactflow', component: () => import('pages/ContactFlowPage.vue') }
     ]
   },
   { path: '/signin', component: () => import('src/pages/SignInPage.vue') },
   { path: '/signup', component: () => import('pages/SignUpPage.vue') },
   { path: '/verification', name: 'verification', component: () => import('pages/VerficationCodePage.vue'), props: true },
+  { path: '/forgotpassword', name: 'forgotpassword', component: () => import('pages/ForgotPasswordPage.vue'), props: true },
   {
     path: '/callback',
     name: 'callback',

@@ -89,6 +89,33 @@
             </q-menu>
         </q-item>
 
+        <!-- Moving to a branch specific to the call flows -->
+        <!-- <q-item clickable>
+          <q-item-section avatar>
+            <q-icon color="blue" name="directions" />
+          </q-item-section>
+
+          <q-item-section>Routing</q-item-section>
+            <q-item-section side>
+              <q-icon name="keyboard_arrow_right" />
+          </q-item-section>
+
+            <q-menu anchor="top right" self="top left">
+              <q-list>
+                <q-item clickable :to="{ path: '/contactflows'}">
+                  <q-item-section avatar>
+                    <q-icon color="blue" name="account_tree" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Contact Flows</q-item-label>
+                    <q-item-label caption>List of Contact Flows</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+              </q-list>
+            </q-menu>
+        </q-item> -->
+
         <q-item clickable :to="{ path: '/queues'}">
           <q-item-section avatar>
             <q-icon color="blue" name="toc" />

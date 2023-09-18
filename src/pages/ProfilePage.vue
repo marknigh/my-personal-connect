@@ -21,22 +21,31 @@
       </div>
     </div>
     <div class="row">
-      <div class="q-pt-md">
-        <q-btn color="primary" label="Save" @click="Save()" />
+      <div class="q-pt-md col-3">
+        <q-btn color="primary" label="Save" @click="Save" />
+      </div>
+      <div class="col-2 q-pt-md self-end">
+        <q-btn flat label="delete account" @click="DeleteAccount"/>
       </div>
     </div>
   </q-page>
 </template>
 
 <script setup>
+import { useQuasar } from 'quasar'
 import { onBeforeMount, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { Auth } from 'aws-amplify'
 import { useInstanceStore } from '../stores/instance'
+import { useUserStore } from '../stores/user'
 
 const instanceStore = useInstanceStore()
+const router = useRouter()
 
+const $q = useQuasar()
 const currentUser = ref()
 const instanceId = ref(instanceStore.Id)
+const userStore = useUserStore()
 
 onBeforeMount(() => {
   Auth.currentAuthenticatedUser().then((user) => {
@@ -49,6 +58,28 @@ async function Save () {
   await Auth.updateUserAttributes(currentUser.value, {
     family_name: currentUser.value.attributes.family_name,
     given_name: currentUser.value.attributes.given_name
+  })
+  userStore.user.attributes.family_name = currentUser.value.attributes.family_name
+  userStore.user.attributes.given_name = currentUser.value.attributes.given_name
+}
+
+async function DeleteAccount () {
+  $q.dialog({
+    title: 'Delete Account',
+    message: 'Type \'delete\' ',
+    prompt: {
+      isValid: val => val === 'delete'
+    },
+    cancel: true,
+    persistent: true
+  }).onOk(async () => {
+    try {
+      const result = await Auth.deleteUser()
+      console.log(result)
+      router.push('/signin')
+    } catch (error) {
+      console.log('Error deleting user', error)
+    }
   })
 }
 </script>
