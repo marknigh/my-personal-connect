@@ -10,7 +10,14 @@
       hide-no-data
     >
       <template v-slot:loading>
-        <q-inner-loading showing color="primary" />
+        <q-circular-progress
+          indeterminate
+          size="25px"
+          :thickness="0.6"
+          color="primary"
+          center-color="secondary"
+          class="q-ma-md"
+        />
       </template>
     </q-table>
   </div>

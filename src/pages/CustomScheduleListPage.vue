@@ -3,11 +3,22 @@
     <q-table
       flat bordered
       dense
+      color="primary"
       :rows="rows"
       :columns="columns"
       :loading="loading"
       row-key="name"
     >
+      <template v-slot:loading>
+          <q-circular-progress
+            indeterminate
+            size="25px"
+            :thickness="0.6"
+            color="primary"
+            center-color="secondary"
+            class="q-ma-md"
+          />
+        </template>
 
       <template #top>
         <q-toolbar>
@@ -90,6 +101,7 @@ onBeforeMount(async () => {
 function NewSchedule () {
   router.push('/customschedule')
 }
+
 function EditSchedule (row) {
   router.push({ name: 'schedule', params: { schedule: row.row.ScheduleId } })
 }

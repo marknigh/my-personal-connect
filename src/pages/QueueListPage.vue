@@ -9,7 +9,7 @@
       <div style="min-width: 400px;">
         <q-list separator>
 
-          <q-item clickable v-ripple @click="GetQueueInfo(queue)" v-for="queue in queues" :key="queue.id">
+          <q-item v-for="queue in queues" :key="queue.id" clickable v-ripple @click="GetQueueInfo(queue)">
 
             <q-item-section>
               <q-item-label lines="1">{{ queue.Name }}</q-item-label>
@@ -84,11 +84,8 @@ async function GetQueueInfo (queue) {
     QueueId: queue.Id
   }
 
-  const command = new DescribeQueueCommand(input)
-
   try {
-    const DescribeQueueResponse = await client.send(command)
-    console.log(DescribeQueueResponse)
+    const DescribeQueueResponse = await client.send(new DescribeQueueCommand(input))
     queueInfo.value = DescribeQueueResponse.Queue
 
     try {
@@ -96,8 +93,7 @@ async function GetQueueInfo (queue) {
         InstanceId: instanceStore.Id,
         HoursOfOperationId: queueInfo.value.HoursOfOperationId
       }
-      const command = new DescribeHoursOfOperationCommand(input)
-      const DescribeHoursOfOperationResponse = await client.send(command)
+      const DescribeHoursOfOperationResponse = await client.send(new DescribeHoursOfOperationCommand(input))
       hoursOfOperation.value = DescribeHoursOfOperationResponse.HoursOfOperation
     } catch (error) {
       console.log('Error retrieving HOO details: ', error)

@@ -89,8 +89,7 @@
             </q-menu>
         </q-item>
 
-        <!-- Moving to a branch specific to the call flows -->
-        <!-- <q-item clickable>
+        <q-item clickable>
           <q-item-section avatar>
             <q-icon color="blue" name="directions" />
           </q-item-section>
@@ -114,7 +113,7 @@
 
               </q-list>
             </q-menu>
-        </q-item> -->
+        </q-item>
 
         <q-item clickable :to="{ path: '/queues'}">
           <q-item-section avatar>

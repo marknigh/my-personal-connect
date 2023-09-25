@@ -7,21 +7,29 @@
       <div class="col-3">
         <q-input disable filled dense outlined v-model="hoursOfOperation.Description" label="Description" />
       </div>
-      <div class="col-1">
+      <div class="col-2">
         <q-input disable filled dense outlined v-model="hoursOfOperation.TimeZone" label="TimeZone" />
       </div>
     </div>
-    <q-separator v-if="hoursOfOperation.Config" spaced="xl" color="yellow" style="width: 55%"/>
+    <q-separator v-if="hoursOfOperation.Config" spaced="xl" color="yellow" style="width: 65%"/>
       <template v-for="dayObject in hoursOfOperation.Config" :key="dayObject.Day">
         <div class="row">
           <div class="col-1 self-center">
             <p class="text-subtitle2">{{ dayObject.Day }}</p>
           </div>
             <div class="col-3">
-              <start-time-picker :day="dayObject.Day" :startTime="dayObject.StartTime" @time-change="timeChange"></start-time-picker>
+              <start-time-picker
+                :day="dayObject.Day"
+                :startTime="dayObject.StartTime"
+                @time-change="timeChange"
+              />
             </div>
             <div class="col-3">
-              <end-time-picker :day="dayObject.Day" :endTime="dayObject.EndTime" @time-change="timeChange"></end-time-picker>
+              <end-time-picker
+                :day="dayObject.Day"
+                :endTime="dayObject.EndTime"
+                @time-change="timeChange"
+              />
             </div>
         </div>
       </template>

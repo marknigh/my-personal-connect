@@ -11,10 +11,11 @@
             <q-input
               type="text"
               label="Verification Code"
-              v-model="code">
-                <template v-slot:before>
-                  <q-icon name="eva-person-outline" />
-                </template>
+              v-model="code"
+            >
+              <template #before>
+                <q-icon name="eva-person-outline" />
+              </template>
             </q-input>
 
           </q-card-section>
@@ -23,7 +24,9 @@
             <q-btn color="primary" class="full-width" label="Verify" @click="verify" />
           </q-card-actions>
 
-          <div class="text-center"> <q-btn flat @click="resendCode()">Resend Code?</q-btn></div>
+          <div class="text-center">
+              <q-btn flat @click="resendCode()" label="Resend Code?" />
+          </div>
 
         </q-card>
       </q-page>

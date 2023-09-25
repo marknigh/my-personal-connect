@@ -1,24 +1,24 @@
 <template>
   <q-layout>
-    <q-page-container>
-      <q-page v-if="!verification" class="flex flex-center">
+    <q-page-container v-if="!verification" class="flex flex-center">
+        <q-toolbar>
+          <q-toolbar-title>
+            <h3 class="text-center text-weight-thin">My Personal Amazon Connect</h3>
+          </q-toolbar-title>
+        </q-toolbar>
           <q-card flat>
-
-            <q-card-section>
-              <h4 class="text-center text-weight-thin">My Personal Amazon Connect</h4>
-            </q-card-section>
-
-            <q-card-section>
+            <q-card-section style="min-width: 400px;">
               <q-input
                 ref="usernameRef"
                 type="email"
                 label="Username"
                 :rules="[(val, rules) => rules.email(val) || 'Must be In Email Format']"
                 lazy-rules="ondemand"
-                v-model="username">
-                  <template v-slot:before>
-                    <q-icon name="o_account_circle" />
-                  </template>
+                v-model="username"
+              >
+                <template #before>
+                  <q-icon name="account_circle" color="primary"/>
+                </template>
               </q-input>
 
               <q-input
@@ -27,10 +27,11 @@
                 label="Password"
                 :rules="[val => !!val || 'Field is Required']"
                 lazy-rules="ondemand"
-                v-model="password">
-                  <template v-slot:before>
-                    <q-icon name="o_lock" />
-                  </template>
+                v-model="password"
+              >
+                <template #before>
+                  <q-icon name="lock" color="primary"/>
+                </template>
               </q-input>
 
             </q-card-section>
@@ -38,7 +39,7 @@
             <q-card-section v-if="loginError">
               <q-banner dense inline-actions class="text-white bg-red">
                 Login Error
-                <template v-slot:action>
+                <template #action>
                   <q-btn flat label="dismiss" @click="dismissError"/>
                   <q-btn v-if="forgotPassword" flat label="Forgot Password?" @click="forgotPasswordCode"/>
                 </template>
@@ -60,9 +61,7 @@
             <q-card-actions>
               <google-login />
             </q-card-actions>
-
           </q-card>
-      </q-page>
       <q-page v-if="verification" class="flex flex-center">
       <q-card flat>
         <q-card-section>
@@ -75,7 +74,7 @@
             type="password"
             label="Password"
             v-model="password">
-              <template v-slot:before>
+              <template #before>
                 <q-icon name="eva-lock-outline" />
               </template>
           </q-input>
@@ -110,7 +109,6 @@ const password = ref(null)
 const passwordRef = ref(null)
 const verification = ref(false)
 const cognitoUser = ref({})
-
 const loginError = ref(false)
 const forgotPassword = ref(false)
 
@@ -159,8 +157,7 @@ function dismissError () {
 // Send confirmation code to user's email
 async function forgotPasswordCode () {
   try {
-    const data = await Auth.forgotPassword(username.value)
-    console.log(data)
+    await Auth.forgotPassword(username.value)
     forgotPasswordStore.username = username.value
     router.push('/forgotpassword')
   } catch (err) {
@@ -172,4 +169,3 @@ async function forgotPasswordCode () {
 
 <style lang="css" scoped>
 </style>
-src/stores/forgotpassword

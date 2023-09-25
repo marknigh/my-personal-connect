@@ -8,10 +8,10 @@
       </q-toolbar>
       <div style="min-width: 400px;">
         <q-list separator>
-          <q-item clickable v-ripple @click="GetRPDetails(rp)" v-for="rp in routingProfiles" :key="rp.Id">
+          <q-item v-for="(routingProfile, index) in routingProfiles" :key="index" clickable v-ripple @click="GetRPDetails(routingProfile)">
 
             <q-item-section>
-              <q-item-label lines="1">{{ rp.name }}</q-item-label>
+              <q-item-label lines="1">{{ routingProfile.name }}</q-item-label>
               <!-- <q-item-label caption>{{ user.QueueType }}</q-item-label> -->
             </q-item-section>
 
@@ -34,7 +34,7 @@
             <span class="text-bold">Associated Queues:</span>
             {{ routingProfileDetails.NumberOfAssociatedQueues }}
             <q-icon name="expand_more" @click="ViewAssociateQueues"/>
-              <RoutingProfileAssociatedQueues v-if="viewQueues" :creds="creds" :routingProfileId="routingProfileDetails.RoutingProfileId"/>
+              <routing-profile-associated-queues v-if="viewQueues" :creds="creds" :routingProfileId="routingProfileDetails.RoutingProfileId"/>
           </p>
           <p class="no-margin text-body1">
             <span class="text-bold">Associated Agents:</span>
@@ -94,15 +94,13 @@ async function GetRoutingProfilesList () {
     InstanceId: instanceStore.Id
   }
 
-  const command = new ListRoutingProfilesCommand(input)
-
   try {
-    const ListRoutingProfilesResponse = await client.send(command)
+    const ListRoutingProfilesResponse = await client.send(new ListRoutingProfilesCommand(input))
     ListRoutingProfilesResponse.RoutingProfileSummaryList.forEach((element) => {
       routingProfiles.value.push({ id: element.Id, name: element.Name })
     })
   } catch (error) {
-    console.log('Error retrieving hours of operation list: ', error)
+    console.log('Error retrieving routing profile list: ', error)
   }
 }
 
@@ -123,10 +121,8 @@ async function GetRPDetails (routingProfile) {
     RoutingProfileId: routingProfile.id
   }
 
-  const command = new DescribeRoutingProfileCommand(input)
-
   try {
-    const DescribeRoutingProfileResponse = await client.send(command)
+    const DescribeRoutingProfileResponse = await client.send(new DescribeRoutingProfileCommand(input))
     routingProfileDetails.value = DescribeRoutingProfileResponse.RoutingProfile
   } catch (error) {
     console.log('Error retrieving user list: ', error)
