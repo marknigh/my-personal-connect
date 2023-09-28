@@ -115,6 +115,15 @@
               </q-list>
             </q-menu>
         </q-item> -->
+        <q-item clickable :to="{ path: '/contacts'}">
+          <q-item-section avatar>
+            <q-icon color="blue" name="contacts" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Contacts</q-item-label>
+            <q-item-label caption>List of Contacts</q-item-label>
+          </q-item-section>
+        </q-item>
 
         <q-item clickable :to="{ path: '/queues'}">
           <q-item-section avatar>
