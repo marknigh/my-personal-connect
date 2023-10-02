@@ -1,5 +1,6 @@
 <template>
   <q-page padding>
+
     <q-table
       flat bordered
       dense
@@ -8,7 +9,6 @@
       :loading="loading"
       row-key="name"
     >
-
       <template #top>
         <q-toolbar>
           <q-toolbar-title>
@@ -30,8 +30,8 @@
           </q-td>
         </q-tr>
       </template>
-
     </q-table>
+
   </q-page>
 </template>
 

@@ -14,12 +14,44 @@
       :columns="columns"
       :loading="loading"
       :rows-per-page-options="[25, 50, 75, 100]"
+      row-key="contactId"
     >
-      <!-- <template v-slot:body-cell-agentName="props">
-        <q-td :props="props">
-           {{ props.row.agentName }}
-        </q-td>
-      </template> -->
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td key="contactId" :props="props">
+            {{ props.row.contactId }}
+          </q-td>
+          <q-td key="initiationTimestamp" :props="props">
+            {{ props.row.initiationTimestamp }}
+          </q-td>
+          <q-td key="disconnectTimestamp" :props="props">
+            {{ props.row.disconnectTimestamp }}
+          </q-td>
+          <q-td key="agentInfo" :props="props">
+            {{ props.row.agentInfo }}
+          </q-td>
+          <q-td key="queueInfo" :props="props">
+            {{ props.row.queueInfo }}
+          </q-td>
+          <q-td key="recording" :props="props">
+            <q-icon v-if="props.row.agentInfo" name="play_arrow" @click="props.expand = !props.expand"/>
+          </q-td>
+          <q-td key="channel" :props="props">
+            {{ props.row.channel }}
+          </q-td>
+          <q-td key="duration" :props="props">
+            {{ props.row.duration }}
+          </q-td>
+        </q-tr>
+        <q-tr v-if="props.expand" :props="props">
+          <q-td colspan="100%">
+            <play-recording
+              :contactId="props.row.contactId"
+              :agentConnectTimestamp="props.row.agentConnectTimestamp"
+            />
+          </q-td>
+        </q-tr>
+      </template>
     </q-table>
   </template>
 </template>
@@ -31,7 +63,7 @@ import { Auth } from 'aws-amplify'
 import axios from 'axios'
 import { ConnectClient, DescribeUserCommand, DescribeQueueCommand } from '@aws-sdk/client-connect'
 import { useInstanceStore } from '../stores/instance'
-
+import PlayRecording from '../components/PlayRecording.vue'
 const instanceStore = useInstanceStore()
 
 const loading = ref(true)
@@ -44,27 +76,33 @@ const columns = ref([
     align: 'left'
   },
   {
-    name: 'startTimestamp',
+    name: 'initiationTimestamp',
     label: 'Start Time',
-    field: (row) => date.formatDate(row.initiationTimestamp, 'MM-DD-YYYY h:m:ss'),
+    field: 'initiationTimestamp',
     align: 'left'
   },
   {
     name: 'disconnectTimestamp',
     label: 'Disconnect Time',
-    field: (row) => date.formatDate(row.disconnectTimestamp, 'MM-DD-YYYY h:m:ss'),
+    field: 'disconnectTimestamp',
     align: 'left'
   },
   {
-    name: 'agentName',
+    name: 'agentInfo',
     label: 'Agent Name',
     field: 'agentInfo',
     align: 'left'
   },
   {
-    name: 'queueName',
+    name: 'queueInfo',
     label: 'Queue Name',
     field: 'queueInfo',
+    align: 'left'
+  },
+  {
+    name: 'recording',
+    label: 'Recording',
+    field: 'recording',
     align: 'left'
   },
   {
@@ -116,7 +154,6 @@ async function getContactEventsList () {
     const contactEventsGroup = groupBy(contactEventsList, 'contactId')
     // considate all events with same ContactId to be displayed in qtable
     consolidateEvents(contactEventsGroup)
-    console.log('consolidatedEvents has been called.')
   }).catch((err) => {
     console.log(err)
   }).finally(() => {
@@ -136,7 +173,6 @@ function groupBy (arr, property) {
 async function consolidateEvents (arr) {
   const consolidate = []
   for (const [key, value] of Object.entries(arr)) {
-    console.log('value: ', value)
     const contactIdObj = {
       contactId: key
     }
@@ -148,6 +184,7 @@ async function consolidateEvents (arr) {
       if (v.agentInfo) {
         // contactIdObj.agentInfo = element.agentInfo.connectedToAgentTimestamp
         contactIdObj.agentInfo = await getAgentName(v.agentInfo.agentArn)
+        contactIdObj.agentConnectTimestamp = v.agentInfo.connectedToAgentTimestamp
       }
 
       if (v.queueInfo) {
@@ -156,7 +193,6 @@ async function consolidateEvents (arr) {
       }
     }
     consolidate.push(contactIdObj)
-    console.log(consolidate)
   }
   tableList.value = consolidate
   loading.value = false

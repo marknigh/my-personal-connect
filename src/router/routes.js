@@ -21,7 +21,8 @@ const routes = [
       { path: '/customschedule/:schedule?', name: 'schedule', component: () => import('pages/CustomSchedulePage.vue') },
       { path: '/contactflows', component: () => import('pages/ContactFlowListPage.vue') },
       { path: '/contactflow/:id', name: 'contactflow', component: () => import('pages/ContactFlowPage.vue') },
-      { path: '/contacts', component: () => import('pages/ContactEventsListPage.vue') }
+      { path: '/contacts', component: () => import('pages/ContactEventsListPage.vue') },
+      { path: '/buckets', component: () => import('pages/GetS3BucketPage.vue') }
     ]
   },
   { path: '/signin', component: () => import('src/pages/SignInPage.vue') },
