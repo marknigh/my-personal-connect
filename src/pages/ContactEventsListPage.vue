@@ -22,10 +22,10 @@
             {{ props.row.contactId }}
           </q-td>
           <q-td key="initiationTimestamp" :props="props">
-            {{ props.row.initiationTimestamp }}
+            {{ formatDateTime(props.row.initiationTimestamp) }}
           </q-td>
           <q-td key="disconnectTimestamp" :props="props">
-            {{ props.row.disconnectTimestamp }}
+            {{ formatDateTime(props.row.disconnectTimestamp) }}
           </q-td>
           <q-td key="agentInfo" :props="props">
             {{ props.row.agentInfo }}
@@ -40,7 +40,7 @@
             {{ props.row.channel }}
           </q-td>
           <q-td key="duration" :props="props">
-            {{ props.row.duration }}
+            {{ duration(props.row) }}
           </q-td>
         </q-tr>
         <q-tr v-if="props.expand" :props="props">
@@ -103,7 +103,7 @@ const columns = ref([
     name: 'recording',
     label: 'Recording',
     field: 'recording',
-    align: 'left'
+    align: 'center'
   },
   {
     name: 'channel',
@@ -114,15 +114,29 @@ const columns = ref([
   {
     name: 'duration',
     label: 'Duration',
-    field: (row) => {
-      const day1 = new Date(row.disconnectTimestamp)
-      const day2 = new Date(row.initiationTimestamp)
-      return date.getDateDiff(day1, day2, 'seconds')
-    },
+    field: 'duration',
     align: 'left'
   }
 ])
 const tableList = ref([])
+
+function formatDateTime (dateTime) {
+  return date.formatDate(dateTime, 'MM-DD-YYYY hh:mm:ss a')
+}
+
+function duration (row) {
+  const day1 = new Date(row.disconnectTimestamp)
+  const day2 = new Date(row.initiationTimestamp)
+  const seconds = date.getDateDiff(day1, day2, 'seconds')
+  if (seconds > 60) {
+    const minutes = Math.floor(seconds / 60)
+    const extraSeconds = seconds % 60
+    const formatSeconds = extraSeconds < 10 ? '0' + extraSeconds : extraSeconds
+    return minutes + ':' + formatSeconds
+  } else {
+    return seconds
+  }
+}
 
 onMounted(() => {
   try {
@@ -156,8 +170,6 @@ async function getContactEventsList () {
     consolidateEvents(contactEventsGroup)
   }).catch((err) => {
     console.log(err)
-  }).finally(() => {
-    loading.value = false
   })
 }
 
@@ -240,7 +252,6 @@ async function getQueueName (queueArn) {
 
   try {
     const DescribeQueueResponse = await client.send(command)
-    console.log(DescribeQueueResponse)
     return DescribeQueueResponse.Queue.Name
   } catch (error) {
     console.log('Error retrieving user list: ', error)

@@ -1,10 +1,9 @@
 <template>
-  <div v-if="loading" class="">
-    <q-spinner-gears
-      color="primary"
-      size="3rem"
-      :thickness="5"
-    />
+  <div v-if="loading">
+    <q-spinner
+        color="primary"
+        :thickness="5"
+      />
   </div>
   <div v-if="!loading">
     <audio controls>
@@ -14,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Auth } from 'aws-amplify'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 
@@ -31,10 +30,6 @@ const props = defineProps({
     type: String,
     required: true
   }
-})
-onUnmounted(() => {
-  console.log('onUnmounted')
-  URL.revokeObjectURL(source.value)
 })
 
 onMounted(() => {
@@ -79,11 +74,9 @@ async function getRecording () {
 
   try {
     const response = await client.send(command)
-    console.log('response: ', response)
     try {
       const dataRead = await response.Body.transformToByteArray()
       const blob = new Blob([dataRead])
-      console.log(blob)
       source.value = URL.createObjectURL(blob)
     } catch (err) {
       console.error('error in making wav file: ', err)

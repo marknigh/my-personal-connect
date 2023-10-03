@@ -5,12 +5,17 @@
       title="Menu Selection (+1 619-821-6184)"
       :rows="rows"
       :columns="columns"
-      row-key="name"
+      row-key="CallFlowId"
       :loading="loading"
       hide-no-data
+      :rows-per-page-options=[15,30,45]
     >
       <template v-slot:loading>
         <q-inner-loading showing color="primary" />
+      </template>
+
+      <template v-slot:top-right>
+        {{totalMenuCount()}}
       </template>
     </q-table>
   </div>
@@ -40,7 +45,7 @@ const columns = ref([
   {
     name: 'date',
     label: 'Date',
-    field: row => (date.formatDate(row.Date.S, 'MM-DD-YYYY HH:MM')),
+    field: row => (formatDateTime(row.Date.S)),
     align: 'center'
   },
   {
@@ -64,16 +69,22 @@ onBeforeMount(async () => {
     response.data.body.Items.forEach((item) => {
       rows.value.push(item)
     })
-    loading.value = false
   }).catch((err) => {
     console.log(err)
+  }).finally(() => {
     loading.value = false
   })
 })
 
-// function formattedDate (epoch) {
-//   return date.formatDate(epoch, 'MM-DD-YYYY HH:SS')
-// }
+function totalMenuCount () {
+  const menuOne = rows.value.filter(x => x.MenuOne.S === '1').length
+  const menuTwo = rows.value.filter(x => x.MenuOne.S === '2').length
+  return `(#1) ${menuOne} (#2) ${menuTwo}`
+}
+
+function formatDateTime (dateTime) {
+  return date.formatDate(dateTime, 'MM-DD-YYYY hh:mm:ss a')
+}
 
 function formatTelephoneNumber (phoneNumberString) {
   const cleaned = ('' + phoneNumberString).replace(/\D/g, '')
