@@ -1,6 +1,8 @@
 <template>
   <template v-for="(action, index) in contactFlowDetail.Actions" :key="index">
-    <p> {{  action.Parameters }}</p>
+    <template v-if="action.Type === 'UpdateContactAttributes' && action.Identifier === 'Set_Schedule'">
+      <p> {{  action.Parameters.Attributes.ScheduleId }}</p>
+    </template>
   </template>
 </template>
 
@@ -48,9 +50,9 @@ async function getContactFlowDetails () {
 
   try {
     const DescribeContactFlowResponse = await client.send(command)
-    console.log(DescribeContactFlowResponse)
+    console.log('DescribeContactFlowResponse: ', DescribeContactFlowResponse)
     contactFlowDetail.value = JSON.parse(DescribeContactFlowResponse.ContactFlow.Content)
-    console.log(JSON.parse(contactFlowDetail.value.Content))
+    console.log('contactFlowDetail.value: ', contactFlowDetail.value)
   } catch (error) {
     console.log('Error retrieving queue list: ', error)
   }

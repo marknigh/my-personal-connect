@@ -4,11 +4,13 @@
     <q-table
       flat bordered
       dense
+      color="primary"
       :rows="rows"
       :columns="columns"
       :loading="loading"
       row-key="name"
     >
+
       <template #top>
         <q-toolbar>
           <q-toolbar-title>
@@ -90,6 +92,7 @@ onBeforeMount(async () => {
 function NewSchedule () {
   router.push('/customschedule')
 }
+
 function EditSchedule (row) {
   router.push({ name: 'schedule', params: { schedule: row.row.ScheduleId } })
 }

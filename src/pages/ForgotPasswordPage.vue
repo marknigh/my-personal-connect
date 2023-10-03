@@ -12,22 +12,24 @@
               bottom-slots
               type="text"
               label="Confirmation Code"
-              v-model="code">
-                <template v-slot:before>
-                  <q-icon name="eva-person-outline" />
-                </template>
-                <template v-slot:hint>
-                  Check Email for Code
-                </template>
+              v-model="code"
+            >
+              <template v-slot:before>
+                <q-icon name="eva-person-outline" />
+              </template>
+              <template v-slot:hint>
+                Check Email for Code
+              </template>
             </q-input>
 
             <q-input
               type="password"
               label="New Password"
-              v-model="password">
-                <template v-slot:before>
-                  <q-icon name="o_lock" />
-                </template>
+              v-model="password"
+            >
+              <template v-slot:before>
+                <q-icon name="o_lock" />
+              </template>
             </q-input>
 
             <q-input
@@ -35,10 +37,11 @@
               lazy-rules
               type="password"
               label="Confirm Password"
-              v-model="confirmedPassword">
-                <template v-slot:before>
-                  <q-icon name="o_confirmation_number" />
-                </template>
+              v-model="confirmedPassword"
+            >
+              <template v-slot:before>
+                <q-icon name="o_confirmation_number" />
+              </template>
             </q-input>
 
           </q-card-section>

@@ -2,7 +2,14 @@
   <q-page padding>
     <div class="row">
       <div class="col-2">
-        <q-select options-dense dense filled v-model="selectedHOO" :options="hoursOOList" option-label="name" label="Hours of Operations" @update:model-value="getHOODetails()" />
+        <q-select
+          options-dense
+          dense filled
+          v-model="selectedHOO"
+          :options="hoursOOList"
+          option-label="name"
+          label="Hours of Operations"
+          @update:model-value="getHOODetails()" />
       </div>
     </div>
     <q-separator spaced="md" color="yellow" style="width: 90%"/>

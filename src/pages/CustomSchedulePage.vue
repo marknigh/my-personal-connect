@@ -8,10 +8,10 @@
     </div>
     <template v-if="!loading">
       <div class="row q-gutter-sm">
-        <div class="col">
+        <div class="col-2">
           <q-input filled dense outlined v-model="schedule.title" label="Title" />
         </div>
-        <div class="col">
+        <div class="col-6">
           <q-input filled dense outlined v-model="schedule.description" label="Description" />
         </div>
         <!-- Implement TimeZone funcationality at a later date.  -->
@@ -19,7 +19,7 @@
           <q-input filled dense outlined v-model="schedule.timezone" label="TimeZone" />
         </div> -->
       </div>
-      <q-separator spaced="md" color="yellow" style="width: 100%"/>
+      <q-separator spaced="md" color="yellow" style="width: 70%"/>
       <template v-for="(dow, index) in schedule.config" :key="index">
         <custom-schedule-time-slots
           :dow="dow"
@@ -28,7 +28,7 @@
           @add-entry="addEntry"
         />
       </template>
-      <q-separator spaced="md" color="yellow" style="width: 100%"/>
+      <q-separator spaced="md" color="yellow" style="width: 70%"/>
       <div class="row">
         <div class="q-mr-md">
           <q-btn color="primary" :label="editing ? 'update' : 'save'" @click="submitSchedule" />
@@ -56,6 +56,7 @@ import DefaultSchedule from '../assets/DefaultSchedule'
 const $q = useQuasar()
 const route = useRoute()
 const router = useRouter()
+
 const loading = ref(true)
 const schedule = ref(DefaultSchedule)
 const editing = ref(false)
@@ -79,7 +80,6 @@ function DeleteSchedule () {
 function Cancel () {
   // clear out the schedule
   schedule.value = {}
-
   router.push({ path: '/customschedules' })
 }
 

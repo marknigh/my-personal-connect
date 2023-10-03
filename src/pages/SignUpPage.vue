@@ -13,10 +13,11 @@
                 <q-input
                   type="email"
                   label="Username"
-                  v-model="username">
-                    <template v-slot:before>
-                      <q-icon name="o_account_circle" />
-                    </template>
+                  v-model="username"
+                >
+                  <template #before>
+                    <q-icon name="account_circle" />
+                  </template>
                 </q-input>
               </div>
             </div>
@@ -24,10 +25,11 @@
             <q-input
               type="password"
               label="Password"
-              v-model="password">
-                <template v-slot:before>
-                  <q-icon name="o_lock" />
-                </template>
+              v-model="password"
+            >
+              <template #before>
+                <q-icon name="lock" />
+              </template>
             </q-input>
 
             <q-input
@@ -35,10 +37,11 @@
               lazy-rules
               type="password"
               label="Confirm Password"
-              v-model="confirmedPassword">
-                <template v-slot:before>
-                  <q-icon name="o_confirmation_number" />
-                </template>
+              v-model="confirmedPassword"
+            >
+              <template v-slot:before>
+                <q-icon name="confirmation_number" />
+              </template>
             </q-input>
 
           </q-card-section>
@@ -56,18 +59,19 @@
 import { ref } from 'vue'
 import { Auth } from 'aws-amplify'
 import { useRouter } from 'vue-router'
+import { useVertificationStore } from '../stores/vertification'
+
+const router = useRouter()
+
+const verificationStore = useVertificationStore()
 
 const username = ref('')
 const password = ref('')
 const confirmedPassword = ref('')
-const router = useRouter()
-import { useVertificationStore } from '../stores/vertification'
-
-const verificationStore = useVertificationStore()
 
 async function signUp () {
   try {
-    const { user } = await Auth.signUp({
+    await Auth.signUp({
       username: username.value,
       password: password.value,
       attributes: { },
@@ -75,7 +79,6 @@ async function signUp () {
         enabled: true
       }
     })
-    console.log(user)
     verificationStore.username = username.value
     router.push({ name: 'verification' })
   } catch (error) {
