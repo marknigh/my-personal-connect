@@ -10,36 +10,54 @@
         :rows-per-page-options="[25, 50, 75, 100]"
         row-key="contactId"
       >
-      <template v-slot:top-right>
-        <q-input ref="startDateRef" class="q-pa-xs" dense filled v-model="inputStartDate" label="Start Date" :rules="[val => !!val || 'Field is required']">
-          <template v-slot:append>
-            <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-              <q-date v-model="startDate">
-                <div class="row items-center justify-end">
-                  <q-btn v-close-popup label="Close" color="primary" flat />
-                </div>
-              </q-date>
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-        </q-input>
-        <q-input ref="endDateRef" class="q-pa-xs" dense filled v-model="inputEndDate" label="End Date" :rules="endDateRules">
-          <template v-slot:append>
-            <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-              <q-date v-model="endDate">
-                <div class="row items-center justify-end">
-                  <q-btn v-close-popup label="Close" color="primary" flat />
-                </div>
-              </q-date>
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-          <template v-slot:after>
-            <q-icon name="search" color="blue" @click="searchContacts"/>
-          </template>
-        </q-input>
+      <template v-slot:top>
+          <div class="col-2">
+            <p class="text-h6">Contacts</p>
+          </div>
+          <q-space />
+          <div class="col-3">
+            <q-input ref="contactIdRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputContactId" :rules="[v => !!v || 'Field is required']">
+              <template v-slot:append>
+                <q-icon v-if="!searchingById" name="search" color="blue" @click="searchContactsById"/>
+                <q-spinner v-if="searchingById" color="primary" />
+              </template>
+            </q-input>
+          </div>
+          <q-space />
+          <div class="col-2">
+            <q-input ref="startDateRef" class="q-pa-xs" lazy-rules="ondemand" dense filled v-model="inputStartDate" label="Start Date" :rules="[val => !!val || 'Field is required']">
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="startDate">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+          <div class="col-2">
+            <q-input ref="endDateRef" class="q-pa-xs" lazy-rules="ondemand" dense filled v-model="inputEndDate" label="End Date" :rules="endDateRules">
+              <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-date v-model="endDate">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+                </q-popup-proxy>
+              </q-icon>
+              </template>
+              <template v-slot:after>
+                <q-icon v-if="!searching" name="search" color="blue" @click="searchContactsByDates"/>
+                <q-spinner v-if="searching" color="primary" />
+              </template>
+            </q-input>
+          </div>
       </template>
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -105,6 +123,8 @@ import PlayRecording from '../components/PlayRecording.vue'
 const instanceStore = useInstanceStore()
 
 const loading = ref(true)
+const searching = ref(false)
+const searchingById = ref(false)
 const creds = ref(null)
 const columns = ref([
   {
@@ -161,6 +181,8 @@ const startDate = ref(null)
 const endDate = ref(null)
 const startDateRef = ref()
 const endDateRef = ref()
+const contactIdRef = ref('')
+const inputContactId = ref('')
 
 const inputStartDate = computed(() => {
   return date.formatDate(startDate.value, 'MM-DD-YYYY')
@@ -312,11 +334,12 @@ async function getQueueName (queueArn) {
   }
 }
 
-async function searchContacts () {
+async function searchContactsByDates () {
   if (startDateRef.value.validate() && endDateRef.value.validate()) {
+    searching.value = true
     // convert startDate and endDate to yyyy-mm-dd format
     const start = startDate.value.replaceAll('/', '-')
-    const end = endDate.value.replace('/', '-')
+    const end = endDate.value.replaceAll('/', '-')
 
     const config = {
       url: (process.env.DEV ? process.env.DEV_URL : process.env.PROD_URL) + '/mpc/contacts/events/search',
@@ -337,8 +360,42 @@ async function searchContacts () {
       const contactEventsGroup = groupBy(contactEventsList, 'contactId')
       // considate all events with same ContactId to be displayed in qtable
       consolidateEvents(contactEventsGroup)
+      searching.value = false
     }).catch((err) => {
       console.log(err)
+    })
+  }
+}
+
+async function searchContactsById () {
+  if (contactIdRef.value.validate()) {
+    searchingById.value = true
+    endDate.value = ''
+    startDate.value = ''
+    const config = {
+      url: (process.env.DEV ? process.env.DEV_URL : process.env.PROD_URL) + '/mpc/contacts/event/',
+      'X-Amz-Date': '',
+      maxBodyLength: Infinity,
+      headers: {
+        Authorization: `Bearer ${((await Auth.currentSession()).getIdToken().getJwtToken())}`
+      },
+      params: { contactId: inputContactId.value }
+    }
+    axios.request(config).then((response) => {
+      console.log('response: ', response)
+      const contactEventsList = []
+      response.data.Items.forEach((item) => {
+        contactEventsList.push(item)
+      })
+      // group by contactId
+      const contactEventsGroup = groupBy(contactEventsList, 'contactId')
+      // considate all events with same ContactId to be displayed in qtable
+      consolidateEvents(contactEventsGroup)
+      inputContactId.value = ''
+    }).catch((err) => {
+      console.log(err)
+    }).finally(() => {
+      searchingById.value = false
     })
   }
 }
