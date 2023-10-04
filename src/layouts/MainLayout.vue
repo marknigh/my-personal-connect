@@ -113,7 +113,7 @@
 
               </q-list>
             </q-menu>
-        </q-item> -->
+        </q-item>
         <q-item clickable :to="{ path: '/contacts'}">
           <q-item-section avatar>
             <q-icon color="blue" name="contacts" />
