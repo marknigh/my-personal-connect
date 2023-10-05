@@ -9,3 +9,13 @@ In this initial version, the instance ID is stored locally via the profile page 
 Recently added and is customized for my instance only is the retrieving of the menu selection (1 or 2) of MenuOne of my demo instance. This was to demostrate Amazon Connect's ability to store user input in a DynamoDB and have this front-end appliation retrieve this data and display in tabular format.
 
 Please reach out to me at marknigh70@gmail.com
+
+
+ROADMAP:
+* Routing->call flows, give the ability for the user to change prompts.
+* Contacts -> click row and get additional details.
+* Contacts -> add Customer Phone Number in list.
+* fix bug with only active call flows are getting returned. Routing->Call Flows.
+* Add the ability to create/modify Quick Connects.
+* Start some capabilities around Contact Lens.
+* Change the playing of the recording to streaming especially large recordings.
