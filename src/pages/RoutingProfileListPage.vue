@@ -105,6 +105,7 @@ async function GetRoutingProfilesList () {
 }
 
 async function GetRPDetails (routingProfile) {
+  routingProfileDetails.value = null
   const credentials = {
     accessKeyId: creds.value.accessKeyId,
     secretAccessKey: creds.value.secretAccessKey,

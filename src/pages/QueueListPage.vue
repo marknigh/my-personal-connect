@@ -74,6 +74,7 @@ onMounted(() => {
 })
 
 async function GetQueueInfo (queue) {
+  queueInfo.value = {}
   const client = new ConnectClient({
     region: 'us-east-1',
     credentials: creds.value

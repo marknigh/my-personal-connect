@@ -25,7 +25,7 @@
           </div>
           <q-space />
           <div class="col-2">
-            <q-input ref="startDateRef" class="q-pa-xs" lazy-rules="ondemand" dense filled v-model="inputStartDate" label="Start Date" :rules="[val => !!val || 'Field is required']">
+            <q-input ref="startDateRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputStartDate" label="Start Date" :rules="[val => !!val || 'Field is required']">
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                   <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -40,7 +40,7 @@
             </q-input>
           </div>
           <div class="col-2">
-            <q-input ref="endDateRef" class="q-pa-xs" lazy-rules="ondemand" dense filled v-model="inputEndDate" label="End Date" :rules="endDateRules">
+            <q-input ref="endDateRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputEndDate" label="End Date" :rules="endDateRules">
               <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -335,6 +335,7 @@ async function getQueueName (queueArn) {
 }
 
 async function searchContactsByDates () {
+  contactIdRef.value.resetValidation()
   if (startDateRef.value.validate() && endDateRef.value.validate()) {
     searching.value = true
     // convert startDate and endDate to yyyy-mm-dd format
@@ -368,6 +369,8 @@ async function searchContactsByDates () {
 }
 
 async function searchContactsById () {
+  startDateRef.value.resetValidation()
+  endDateRef.value.resetValidation()
   if (contactIdRef.value.validate()) {
     searchingById.value = true
     endDate.value = ''

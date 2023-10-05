@@ -53,12 +53,14 @@ const columns = ref([
     name: 'date',
     label: 'Date',
     field: row => (formatDateTime(row.Date.S)),
-    align: 'center'
+    align: 'center',
+    sortable: true
   },
   {
     name: 'MenuOne',
     label: 'Menu One',
-    field: row => row.MenuOne.S
+    field: row => row.MenuOne.S,
+    sortable: true
   }
 ])
 
@@ -72,7 +74,6 @@ onBeforeMount(async () => {
     }
   }
   axios.request(config).then((response) => {
-    console.log('response: ', response)
     response.data.body.Items.forEach((item) => {
       rows.value.push(item)
     })
@@ -86,7 +87,7 @@ onBeforeMount(async () => {
 function totalMenuCount () {
   const menuOne = rows.value.filter(x => x.MenuOne.S === '1').length
   const menuTwo = rows.value.filter(x => x.MenuOne.S === '2').length
-  return `(#1) ${menuOne} (#2) ${menuTwo}`
+  return `Option #1 - ${menuOne}, Option #2 - ${menuTwo}`
 }
 
 function formatDateTime (dateTime) {

@@ -7,15 +7,18 @@
               Call Flows
             </q-toolbar-title>
           </q-toolbar>
-        <template v-for="(flow, index) in contactFlowsList" :key="index">
-          <template v-if="flow.ContactFlowType === 'CONTACT_FLOW'">
+        <template v-for="(flow) in contactFlowsList" :key="flow.Id">
             <q-item>
               <q-item-section avatar>
-                <q-avatar size="sm" :color="flow.ContactFlowState == 'ACTIVE' ? 'green' : 'red'" icon="notifications_active" text-color="black"/>
+                <q-avatar size="sm"
+                  :color="flow.ContactFlowState == 'ACTIVE' ? 'green' : 'red'"
+                  :icon="flow.ContactFlowState == 'ACTIVE' ? 'notifications_active' : 'notifications_off'"
+                  text-color="black"
+                />
               </q-item-section>
               <q-item-section>{{ flow.Name }}</q-item-section>
               <q-item-section>{{ flow.ContactFlowType }}</q-item-section>
-              <q-item-section>
+              <q-item-section v-if="flow.ContactFlowType == 'CONTACT_FLOW'">
                 <template v-for="(flowSchedule, index) in flowScheduleList" :key="index">
                   <template v-if="flowSchedule.flowId === flow.Id">
                     <call-flow-edit-schedule
@@ -27,7 +30,6 @@
                 </template>
               </q-item-section>
             </q-item>
-          </template>
         </template>
         </q-list>
       </q-page>
@@ -82,16 +84,11 @@ async function getContactFlowsList () {
   })
 
   const input = {
-    InstanceId: instanceStore.Id,
-    ContactFlowTypes: [],
-    NextToken: '',
-    MaxResults: 25
+    InstanceId: instanceStore.Id
   }
 
-  const command = new ListContactFlowsCommand(input)
-
   try {
-    const ListContactFlowsResponse = await client.send(command)
+    const ListContactFlowsResponse = await client.send(new ListContactFlowsCommand(input))
     contactFlowsList.value = ListContactFlowsResponse.ContactFlowSummaryList
   } catch (error) {
     console.log('Error retrieving contact flow list: ', error)
