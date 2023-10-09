@@ -94,7 +94,7 @@
             <q-icon color="blue" name="directions" />
           </q-item-section>
 
-          <q-item-section>Routing</q-item-section>
+          <q-item-section>Call Flows</q-item-section>
             <q-item-section side>
               <q-icon name="keyboard_arrow_right" />
           </q-item-section>
@@ -106,7 +106,7 @@
                     <q-icon color="blue" name="account_tree" />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label>Contact Flows</q-item-label>
+                    <q-item-label>Contact Flows - Custom Schedule</q-item-label>
                     <q-item-label caption>List of Contact Flows</q-item-label>
                   </q-item-section>
                 </q-item>

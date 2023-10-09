@@ -8,7 +8,7 @@
             </q-toolbar-title>
           </q-toolbar>
         <template v-for="(flow) in contactFlowsList" :key="flow.Id">
-            <q-item>
+            <q-item :clickable="flow.Status === 'published'" :to="{ path: `contactflowdetails/${flow.Id}` }">
               <q-item-section avatar>
                 <q-avatar size="sm"
                   :color="flow.ContactFlowState == 'ACTIVE' ? 'green' : 'red'"
@@ -16,8 +16,10 @@
                   text-color="black"
                 />
               </q-item-section>
-              <q-item-section>{{ flow.Name }}</q-item-section>
+              <q-item-section>
+                <q-item-label header>{{ flow.Name }}</q-item-label></q-item-section>
               <q-item-section>{{ flow.ContactFlowType }}</q-item-section>
+              <q-item-section>{{ flow.Status }}</q-item-section>
               <q-item-section v-if="flow.ContactFlowType == 'CONTACT_FLOW'">
                 <template v-for="(flowSchedule, index) in flowScheduleList" :key="index">
                   <template v-if="flowSchedule.flowId === flow.Id">
@@ -26,6 +28,9 @@
                       :flow-schedule="flowSchedule"
                       :custom-schedule-list="customScheduleList"
                     />
+                  </template>
+                  <template v-else>
+                    <q-item-section/>
                   </template>
                 </template>
               </q-item-section>
@@ -89,6 +94,7 @@ async function getContactFlowsList () {
 
   try {
     const ListContactFlowsResponse = await client.send(new ListContactFlowsCommand(input))
+    console.log('ListContactFlowsResponse.ContactFlowSummaryList', ListContactFlowsResponse.ContactFlowSummaryList)
     contactFlowsList.value = ListContactFlowsResponse.ContactFlowSummaryList
   } catch (error) {
     console.log('Error retrieving contact flow list: ', error)

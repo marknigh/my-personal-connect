@@ -11,53 +11,53 @@
         row-key="contactId"
       >
       <template v-slot:top>
-          <div class="col-2">
-            <p class="text-h6">Contacts</p>
-          </div>
-          <q-space />
-          <div class="col-3">
-            <q-input ref="contactIdRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputContactId" :rules="[v => !!v || 'Field is required']">
-              <template v-slot:append>
-                <q-icon v-if="!searchingById" name="search" color="blue" @click="searchContactsById"/>
-                <q-spinner v-if="searchingById" color="primary" />
-              </template>
-            </q-input>
-          </div>
-          <q-space />
-          <div class="col-2">
-            <q-input ref="startDateRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputStartDate" label="Start Date" :rules="[val => !!val || 'Field is required']">
-              <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                    <q-date v-model="startDate">
-                      <div class="row items-center justify-end">
-                        <q-btn v-close-popup label="Close" color="primary" flat />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
-          </div>
-          <div class="col-2">
-            <q-input ref="endDateRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputEndDate" label="End Date" :rules="endDateRules">
-              <template v-slot:append>
+        <div class="col-2">
+          <p class="text-h6">Contacts</p>
+        </div>
+        <q-space />
+        <div class="col-3">
+          <q-input ref="contactIdRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputContactId" :rules="[v => !!v || 'Field is required']">
+            <template v-slot:append>
+              <q-icon v-if="!searchingById" name="search" color="blue" @click="searchContactsById"/>
+              <q-spinner v-if="searchingById" color="primary" />
+            </template>
+          </q-input>
+        </div>
+        <q-space />
+        <div class="col-2">
+          <q-input ref="startDateRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputStartDate" label="Start Date" :rules="[val => !!val || 'Field is required']">
+            <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-date v-model="endDate">
-                  <div class="row items-center justify-end">
-                    <q-btn v-close-popup label="Close" color="primary" flat />
-                  </div>
-                </q-date>
+                  <q-date v-model="startDate">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
                 </q-popup-proxy>
               </q-icon>
-              </template>
-              <template v-slot:after>
-                <q-icon v-if="!searching" name="search" color="blue" @click="searchContactsByDates"/>
-                <q-spinner v-if="searching" color="primary" />
-              </template>
-            </q-input>
-          </div>
+            </template>
+          </q-input>
+        </div>
+        <div class="col-2">
+          <q-input ref="endDateRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputEndDate" label="End Date" :rules="endDateRules">
+            <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+              <q-date v-model="endDate">
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-date>
+              </q-popup-proxy>
+            </q-icon>
+            </template>
+            <template v-slot:after>
+              <q-icon v-if="!searching" name="search" color="blue" @click="searchContactsByDates"/>
+              <q-spinner v-if="searching" color="primary" />
+            </template>
+          </q-input>
+        </div>
       </template>
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -120,6 +120,7 @@ import axios from 'axios'
 import { ConnectClient, DescribeUserCommand, DescribeQueueCommand } from '@aws-sdk/client-connect'
 import { useInstanceStore } from '../stores/instance'
 import PlayRecording from '../components/PlayRecording.vue'
+
 const instanceStore = useInstanceStore()
 
 const loading = ref(true)
@@ -196,6 +197,7 @@ const endDateRules = [
   val => !!val || 'Field is required',
   val => (val >= inputStartDate.value) || 'Must be equal to or greater than Start Date'
 ]
+
 onMounted(() => {
   try {
     Auth.currentCredentials().then(async (credentials) => {
@@ -402,6 +404,7 @@ async function searchContactsById () {
     })
   }
 }
+
 </script>
 
 <style lang="scss" scoped>

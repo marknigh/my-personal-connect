@@ -1,35 +1,32 @@
 <template>
-  <template v-for="(action, index) in contactFlowDetail.Actions" :key="index">
-    <template v-if="action.Type === 'UpdateContactAttributes' && action.Identifier === 'Set_Schedule'">
-      <p> {{  action.Parameters.Attributes.ScheduleId }}</p>
-    </template>
-  </template>
+  <div>
+{{ contactId }}
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { Auth } from 'aws-amplify'
-import { ConnectClient, DescribeContactFlowCommand } from '@aws-sdk/client-connect'
+import { ConnectClient, DescribeContactCommand, GetContactAttributesCommand } from '@aws-sdk/client-connect'
 import { useInstanceStore } from '../stores/instance'
 import { useRoute } from 'vue-router'
 
-const route = useRoute()
 const instanceStore = useInstanceStore()
-const contactFlowDetail = ref({})
+const route = useRoute()
 const creds = ref(null)
-
+const contactId = ref()
 onMounted(() => {
   try {
     Auth.currentCredentials().then(async (credentials) => {
       creds.value = credentials
-      getContactFlowDetails()
+      getContactDetails()
     })
   } catch (error) {
     console.log('Error retrieving credentials: ', error)
   }
 })
 
-async function getContactFlowDetails () {
+async function getContactDetails () {
   const credentials = {
     accessKeyId: creds.value.accessKeyId,
     secretAccessKey: creds.value.secretAccessKey,
@@ -43,21 +40,23 @@ async function getContactFlowDetails () {
 
   const input = {
     InstanceId: instanceStore.Id,
-    ContactFlowId: route.params.id
+    ContactId: route.params.contactid
   }
 
-  const command = new DescribeContactFlowCommand(input)
+  const attributeInput = {
+    InstanceId: instanceStore.Id,
+    InitialContactId: route.params.contactid
+  }
 
   try {
-    const DescribeContactFlowResponse = await client.send(command)
-    console.log('DescribeContactFlowResponse: ', DescribeContactFlowResponse)
-    contactFlowDetail.value = JSON.parse(DescribeContactFlowResponse.ContactFlow.Content)
-    console.log('contactFlowDetail.value: ', contactFlowDetail.value)
+    const DescribeContactResponse = await client.send(new DescribeContactCommand(input))
+    console.log('DescribeContactResponse: ', DescribeContactResponse)
+    const GetContactAttributesResponse = await client.send(new GetContactAttributesCommand(attributeInput))
+    console.log('GetContactAttributesResponse: ', GetContactAttributesResponse)
   } catch (error) {
     console.log('Error retrieving queue list: ', error)
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

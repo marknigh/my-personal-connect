@@ -20,8 +20,9 @@ const routes = [
       { path: '/customschedules', component: () => import('pages/CustomScheduleListPage.vue') },
       { path: '/customschedule/:schedule?', name: 'schedule', component: () => import('pages/CustomSchedulePage.vue') },
       { path: '/contactflows', component: () => import('pages/ContactFlowListPage.vue') },
-      { path: '/contactflow/:id', name: 'contactflow', component: () => import('pages/ContactFlowPage.vue') },
-      { path: '/contacts', component: () => import('pages/ContactEventsListPage.vue') },
+      { path: '/contactflowdetails/:flowid', name: 'contactflow', component: () => import('pages/ContactFlowDetailsPage.vue') },
+      { path: '/contacts', component: () => import('pages/ContactsListPage.vue') },
+      { path: '/contactdetails/:contactid', name: 'contactdetails', component: () => import('pages/ContactDetailsPage.vue') },
       { path: '/buckets', component: () => import('pages/GetS3BucketPage.vue') }
     ]
   },

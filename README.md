@@ -12,10 +12,11 @@ Please reach out to me at marknigh70@gmail.com
 
 
 ROADMAP:
-* Routing->call flows, give the ability for the user to change prompts.
+* Routing->call flows, give the ability for the user to change prompts text.
 * Contacts -> click row and get additional details.
 * Contacts -> add Customer Phone Number in list.
 * fix bug with only active call flows are getting returned. Routing->Call Flows.
 * Add the ability to create/modify Quick Connects.
 * Start some capabilities around Contact Lens.
 * Change the playing of the recording to streaming especially large recordings.
+* Add Campaign functionality.
