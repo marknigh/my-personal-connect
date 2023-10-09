@@ -13,6 +13,7 @@ Please reach out to me at marknigh70@gmail.com
 
 ROADMAP:
 * Routing->call flows, give the ability for the user to change prompts text.
+-> version 0.1.1
 * Contacts -> click row and get additional details.
 * Contacts -> add Customer Phone Number in list.
 * fix bug with only active call flows are getting returned. Routing->Call Flows.
@@ -20,3 +21,11 @@ ROADMAP:
 * Start some capabilities around Contact Lens.
 * Change the playing of the recording to streaming especially large recordings.
 * Add Campaign functionality.
+* Create check at save on custom schedule to ensure 24 hours are reflective correctly.
+
+October 9th, 2024
+Semantic Versioning
+MAJOR.MINOR.PATCH
+0.0.1
+Will also creating a new branch for development, Develop. All feature branches and hotfixes will be branched off of Develop. Develop will be merge to main and push when done. hotfixes with branch from main and merged into main and develop.
+https://nvie.com/posts/a-successful-git-branching-model/
