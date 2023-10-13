@@ -3,38 +3,58 @@
     <div class="fit row wrap justify-evenly">
       <q-toolbar>
         <q-toolbar-title shrink>
-          Prompts in Call Flow
+          Prompts in  {{ contactFlowName }}
         </q-toolbar-title>
+        <q-space />
+        <q-btn flat round color="accent" size="md" icon="arrow_back" :to="{ path: '/contactflows'}"/>
       </q-toolbar>
-      <div style="min-width: 400px;">
-        <q-list separator>
-          <template v-for="(action, index) in contactFlowDetail.Actions" :key="index">
-            <template v-if="action.Type === 'MessageParticipant'">
-              <q-item clickable @click="showTextSSML(action)">
-                {{ action.Identifier }}
-              </q-item>
+      <div style="height: 650px; max-width: 500px; min-width: 400px;">
+        <q-list separator padding>
+            <template v-for="(action, key, index) in contactActionGroup" :key="index">
+              <template v-if="key === 'MessageParticipant'">
+                <q-item-label>Play</q-item-label>
+                <template v-for="(mp, index) in action" :key="index">
+                  <display-prompt-content :action="mp" :contactFlowDetail="contactFlowDetail" @edit="showParameters"/>
+                </template>
+              </template>
+              <template v-if="key === 'GetParticipantInput'">
+                <q-item-label>Get Customer Input</q-item-label>
+                <template v-for="(gp, index) in action" :key="index">
+                  <display-prompt-content :action="gp" :contactFlowDetail="contactFlowDetail" @edit="showParameters"/>
+                </template>
+              </template>
+              <template v-if="key === 'MessageParticipantIteratively'">
+                <q-item-label>Loop Prompts</q-item-label>
+                <template v-for="(mp, index) in action" :key="index">
+                    <display-prompt-content :action="mp" @edit="showParameters" :contactFlowDetail="contactFlowDetail"/>
+                </template>
+              </template>
             </template>
-          </template>
         </q-list>
       </div>
       <q-separator spaced vertical color="black" style="height: 500px"/>
         <div style="max-width: 100%; min-width: 500px;">
           <template v-if="textSSML">
-            <q-input
-              :readonly="!editing"
-              bottom-slots
-              v-model="textSSML.Parameters.Text"
-              type="textarea"
-              autogrow
-            >
-              <template #after>
-                <q-icon name="edit" color="primary" @click="editText"/>
-                <q-icon v-if="editing" color="primary" name="save" @click="saveText"/>
-              </template>
-              <template #counter>
-                {{ textSSML.length }}
-              </template>
-            </q-input>
+              <q-input
+                :readonly="!editingTextSSML"
+                bottom-slots
+                v-model="textSSML"
+                type="textarea"
+                autogrow
+              >
+                <template #after>
+                  <template v-if="!editingTextSSML">
+                    <q-icon name="edit" color="primary" @click="editPromptText"/>
+                  </template>
+                  <template v-else>
+                    <q-icon color="primary" name="save" @click="savePrompt"/>
+                    <q-icon color="primary" name="cancel" @click="cancelEdit"/>
+                  </template>
+                </template>
+                <template #counter>
+                  Character Count: {{ textSSML.length }} - {{ 'Text' in currentAction.Parameters ? 'Text' : 'SSML' }}
+                </template>
+              </q-input>
           </template>
         </div>
     </div>
@@ -42,18 +62,26 @@
 </template>
 
 <script setup>
+import { useQuasar } from 'quasar'
 import { ref, onMounted } from 'vue'
 import { Auth } from 'aws-amplify'
 import { ConnectClient, DescribeContactFlowCommand, UpdateContactFlowContentCommand } from '@aws-sdk/client-connect'
 import { useInstanceStore } from '../stores/instance'
 import { useRoute } from 'vue-router'
+import DisplayPromptContent from '../components/DisplayPromptContent.vue'
 
+const $q = useQuasar()
 const route = useRoute()
 const instanceStore = useInstanceStore()
 const contactFlowDetail = ref({})
 const creds = ref(null)
+const originalTextSSML = ref('')
 const textSSML = ref('')
-const editing = ref(false)
+const type = ref(null)
+const editingTextSSML = ref(false)
+const currentAction = ref(null)
+const contactActionGroup = ref({})
+const contactFlowName = ref(null)
 
 onMounted(() => {
   try {
@@ -85,48 +113,69 @@ async function getContactFlowDetails () {
 
   try {
     const DescribeContactFlowResponse = await client.send(new DescribeContactFlowCommand(input))
-    console.log('DescribeContactFlowResponse: ', DescribeContactFlowResponse)
     contactFlowDetail.value = JSON.parse(DescribeContactFlowResponse.ContactFlow.Content)
-    console.log('contactFlowDetail.value: ', contactFlowDetail.value)
+    contactFlowName.value = DescribeContactFlowResponse.ContactFlow.Name
+    contactActionGroup.value = groupBy(contactFlowDetail.value.Actions, 'Type')
   } catch (error) {
     console.log('Error retrieving queue list: ', error)
   }
 }
 
-function showTextSSML (action) {
+function groupBy (arr, property) {
+  return arr.reduce((action, x) => {
+    if (!action[x[property]]) { action[x[property]] = [] }
+    action[x[property]].push(x)
+    return action
+  }, {})
+}
+
+function showParameters (action) {
   console.log('displayTextSSML: ', action)
-  textSSML.value = action
+  currentAction.value = action
+  type.value = action.Type
+  textSSML.value = action.Parameters.Text ? action.Parameters.Text : action.Parameters.SSML
 }
 
-function editText () {
-  console.log('editText')
-  editing.value = true
+function editPromptText (identifier) {
+  originalTextSSML.value = textSSML.value
+  editingTextSSML.value = true
 }
 
-async function saveText () {
-  console.log(textSSML.value)
-  // const credentials = {
-  //   accessKeyId: creds.value.accessKeyId,
-  //   secretAccessKey: creds.value.secretAccessKey,
-  //   sessionToken: creds.value.sessionToken
-  // }
+function cancelEdit () {
+  textSSML.value = originalTextSSML.value
+  editingTextSSML.value = false
+}
+
+async function savePrompt () {
+  const findIndex = contactFlowDetail.value.Actions.findIndex((element) => {
+    return element.Identifier === currentAction.value.Identifier
+  })
+
+  contactFlowDetail.value.Actions[findIndex].Parameters.Text = textSSML.value
 
   const client = new ConnectClient({
     region: 'us-east-1',
     credentials: creds.value
   })
 
-  const input = {
-    InstanceId: instanceStore.Id,
-    ContactFlowId: route.params.flowid,
-    Content: JSON.stringify(contactFlowDetail.value)
-  }
-
   try {
-    const UpdatePromptResponse = await client.send(new UpdateContactFlowContentCommand(input))
-    console.log('UpdatePromptResponse: ', UpdatePromptResponse)
+    await client.send(new UpdateContactFlowContentCommand(
+      {
+        InstanceId: instanceStore.Id,
+        ContactFlowId: route.params.flowid,
+        Content: JSON.stringify(contactFlowDetail.value)
+      }
+    ))
+    $q.notify(
+      {
+        type: 'positive',
+        message: 'The text has been updated'
+      }
+    )
   } catch (error) {
-    console.log('Error retrieving queue list: ', error)
+    console.log('Error updating prompt: ', error)
+  } finally {
+    editingTextSSML.value = false
   }
 }
 
