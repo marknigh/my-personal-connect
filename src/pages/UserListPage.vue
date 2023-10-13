@@ -13,7 +13,7 @@
           <q-list separator>
             <q-item clickable v-ripple @click="GetUserDetails(user.id)" v-for="user in users" :key="user.Id">
               <q-item-section>
-                <q-item-label lines="1">{{ user.username }}</q-item-label>
+                <q-item-label>{{ user.username }}</q-item-label>
                 <!-- <q-item-label caption>{{ user.QueueType }}</q-item-label> -->
               </q-item-section>
 

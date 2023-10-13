@@ -13,7 +13,6 @@ Please reach out to me at marknigh70@gmail.com
 
 ROADMAP:
 * Routing->call flows, give the ability for the user to change prompts text.
--> version 0.1.1
 * Contacts -> click row and get additional details.
 * Contacts -> add Customer Phone Number in list.
 * fix bug with only active call flows are getting returned. Routing->Call Flows.
