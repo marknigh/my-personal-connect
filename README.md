@@ -14,7 +14,7 @@ Please reach out to me at marknigh70@gmail.com
 ROADMAP:
 * Call Flows, give the ability for the user to change prompts text or SSML only. release 0.2.0
 * Call Flows, filter on Call Flow Name 0.2.0
-* Custom Schedule. Add Holidays.
+* Custom Schedule. Add Holidays. 0.3.0
 * Contacts -> click row and get additional details.
 * Contacts -> add Customer Phone Number in list.
 * fix bug with only active call flows are getting returned. Routing->Call Flows.
