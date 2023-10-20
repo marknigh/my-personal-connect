@@ -85,6 +85,15 @@
                     <q-item-label caption>Custom Schedule for your Queue</q-item-label>
                   </q-item-section>
                 </q-item>
+                <q-item clickable :to="{ path: '/holidays'}">
+                  <q-item-section avatar>
+                    <q-icon color="blue" name="event_busy" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label>Holiday Schedule</q-item-label>
+                    <q-item-label caption>Create a Holiday Schedule</q-item-label>
+                  </q-item-section>
+                </q-item>
               </q-list>
             </q-menu>
         </q-item>

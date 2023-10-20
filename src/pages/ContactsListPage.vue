@@ -16,7 +16,7 @@
         </div>
         <q-space />
         <div class="col-3">
-          <q-input ref="contactIdRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputContactId" :rules="[v => !!v || 'Field is required']">
+          <q-input ref="contactIdRef" label="Search by Contact ID" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputContactId" :rules="[v => !!v || 'Field is required']">
             <template v-slot:append>
               <q-icon v-if="!searchingById" name="search" color="blue" @click="searchContactsById"/>
               <q-spinner v-if="searchingById" color="primary" />

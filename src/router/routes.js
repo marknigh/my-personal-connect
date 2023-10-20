@@ -23,7 +23,9 @@ const routes = [
       { path: '/contactflowdetails/:flowid', name: 'contactflow', component: () => import('pages/ContactFlowDetailsPage.vue') },
       { path: '/contacts', component: () => import('pages/ContactsListPage.vue') },
       { path: '/contactdetails/:contactid', name: 'contactdetails', component: () => import('pages/ContactDetailsPage.vue') },
-      { path: '/buckets', component: () => import('pages/GetS3BucketPage.vue') }
+      { path: '/buckets', component: () => import('pages/GetS3BucketPage.vue') },
+      { path: '/holidays', component: () => import('pages/HolidayListPage.vue') },
+      { path: '/holidaydetails/:holidayId?', component: () => import('pages/HolidayDetailsPage.vue') }
     ]
   },
   { path: '/signin', component: () => import('src/pages/SignInPage.vue') },

@@ -11,15 +11,18 @@
         <div class="col-2">
           <q-input filled dense outlined v-model="schedule.title" label="Title" />
         </div>
-        <div class="col-6">
+        <div class="col-5">
           <q-input filled dense outlined v-model="schedule.description" label="Description" />
+        </div>
+        <div class="col-3">
+          <q-select filled dense v-model="schedule.holidaySchedule" :options="holidaySchedules" label="Holiday Schedule" map-options emit-value option-value="HolidayId" option-label="title"/>
         </div>
         <!-- Implement TimeZone funcationality at a later date.  -->
         <!-- <div class="col">
           <q-input filled dense outlined v-model="schedule.timezone" label="TimeZone" />
         </div> -->
       </div>
-      <q-separator spaced="md" color="yellow" style="width: 70%"/>
+      <q-separator spaced="md" color="yellow" style="width: 85%"/>
       <template v-for="(dow, index) in schedule.config" :key="index">
         <custom-schedule-time-slots
           :dow="dow"
@@ -60,8 +63,10 @@ const router = useRouter()
 const loading = ref(true)
 const schedule = ref(DefaultSchedule)
 const editing = ref(false)
+const holidaySchedules = ref([])
 
 GetScheduleInfo()
+GetHolidaySchedules()
 
 function DeleteSchedule () {
   $q.dialog({
@@ -81,6 +86,25 @@ function Cancel () {
   // clear out the schedule
   schedule.value = {}
   router.push({ path: '/customschedules' })
+}
+
+async function GetHolidaySchedules () {
+  const config = {
+    url: (process.env.DEV ? process.env.DEV_URL : process.env.PROD_URL) + '/mpc/holidays/schedules',
+    'X-Amz-Date': '',
+    maxBodyLength: Infinity,
+    headers: {
+      Authorization: `Bearer ${((await Auth.currentSession()).getIdToken().getJwtToken())}`
+    }
+  }
+  axios.request(config).then((response) => {
+    console.log('response: ', response)
+    response.data.Items.forEach((item) => {
+      holidaySchedules.value.push(item)
+    })
+  }).catch((err) => {
+    console.log(err)
+  }).finally()
 }
 
 async function GetScheduleInfo () {
@@ -155,14 +179,11 @@ function findHighestIndex (dowElement) {
 }
 
 async function submitSchedule () {
-  console.log((await Auth.currentSession()).getIdToken().getJwtToken())
-  console.log(schedule.value)
-
   // new schedule or updating
   const method = editing.value ? 'PUT' : 'POST'
   const config = {
     method,
-    url: (process.env.DEV ? process.env.DEV_URL : process.env.PROD_URL) + '/mpc/schedule',
+    url: (process.env.DEV ? process.env.DEV_URL : process.env.PROD_URL) + '/mpc/schedule/schedule',
     'X-Amz-Date': '',
     maxBodyLength: Infinity,
     headers: {

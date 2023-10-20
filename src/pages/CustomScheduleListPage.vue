@@ -1,20 +1,19 @@
 <template>
-  <q-page padding>
-
     <q-table
-      flat bordered
-      dense
-      color="primary"
+      flat
       :rows="rows"
       :columns="columns"
       :loading="loading"
       row-key="name"
     >
-
       <template #top>
         <q-toolbar>
           <q-toolbar-title>
-            Custom Schedule <q-icon size="xs" name="add" color="secondary" @click="NewSchedule"></q-icon>
+            <p class="text-h6"> Custom Schedule
+            <q-badge align="top" color="white">
+              <q-icon name="add" size="xs" color="primary" @click="NewSchedule"></q-icon>
+            </q-badge>
+          </p>
           </q-toolbar-title>
         </q-toolbar>
       </template>
@@ -33,8 +32,6 @@
         </q-tr>
       </template>
     </q-table>
-
-  </q-page>
 </template>
 
 <script setup>

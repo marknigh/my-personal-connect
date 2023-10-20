@@ -12,7 +12,9 @@ Please reach out to me at marknigh70@gmail.com
 
 
 ROADMAP:
-* Routing->call flows, give the ability for the user to change prompts text.
+* Routing->call flows, give the ability for the user to change prompts text. release 0.3.0
+* Call Flows, filter on Call Flow Name 0.2.0
+* Custom Schedule. Add Holidays. release 0.3.0
 * Contacts -> click row and get additional details.
 * Contacts -> add Customer Phone Number in list.
 * fix bug with only active call flows are getting returned. Routing->Call Flows.
@@ -20,7 +22,7 @@ ROADMAP:
 * Start some capabilities around Contact Lens.
 * Change the playing of the recording to streaming especially large recordings.
 * Add Campaign functionality.
-* Create check at save on custom schedule to ensure 24 hours are reflective correctly.
+* Create validate check at save on custom schedule to ensure 24 hours are reflective correctly.
 
 October 9th, 2024
 Semantic Versioning
