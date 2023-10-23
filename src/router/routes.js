@@ -33,7 +33,7 @@ const routes = [
   { path: '/verification', name: 'verification', component: () => import('pages/VerficationCodePage.vue'), props: true },
   { path: '/forgotpassword', name: 'forgotpassword', component: () => import('pages/ForgotPasswordPage.vue'), props: true },
   {
-    path: '/callback',
+    path: '/callback/?',
     name: 'callback',
     component: () => import('pages/CallbackPage.vue'),
     beforeEnter: async () => {

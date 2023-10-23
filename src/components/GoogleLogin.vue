@@ -1,5 +1,5 @@
 <template>
-    <q-btn color="red" icon="eva-google" left class="full-width" label="Login with Google" @click="loginWithGoogle"/>
+  <q-btn color="red" icon="eva-google" left class="full-width" label="Login with Google" @click="loginWithGoogle"/>
 </template>
 
 <script setup>

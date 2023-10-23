@@ -10,6 +10,8 @@ Recently added and is customized for my instance only is the retrieving of the m
 
 Please reach out to me at marknigh70@gmail.com
 
+Current Development:
+version 0.4.0 -> Quick Connects.
 
 ROADMAP:
 * Routing->call flows, give the ability for the user to change prompts text. release 0.3.0
