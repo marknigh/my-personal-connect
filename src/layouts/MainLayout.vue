@@ -78,7 +78,7 @@
 
                 <q-item clickable :to="{ path: '/customschedules'}">
                   <q-item-section avatar>
-                    <q-icon color="blue" name="calendar_month" />
+                    <q-icon color="blue" name="date_range" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Custom Schedule</q-item-label>
@@ -87,7 +87,7 @@
                 </q-item>
                 <q-item clickable :to="{ path: '/holidays'}">
                   <q-item-section avatar>
-                    <q-icon color="blue" name="event_busy" />
+                    <q-icon color="blue" name="insert_invitation" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Holiday Schedule</q-item-label>

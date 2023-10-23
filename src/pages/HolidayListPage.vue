@@ -6,15 +6,17 @@
         :columns="columns"
         @row-click="getHolidayDetails"
       >
-
         <template #top>
           <q-toolbar>
             <q-toolbar-title>
-              Holiday Schedule <q-icon size="xs" name="add" color="secondary" @click="newHoliday"></q-icon>
+              <p class="text-h6"> Holiday Schedules
+                <q-badge align="top" color="white">
+                  <q-icon name="add" size="xs" color="primary" @click="newHoliday"></q-icon>
+                </q-badge>
+              </p>
             </q-toolbar-title>
           </q-toolbar>
         </template>
-
       </q-table>
   </template>
   <template v-else>
@@ -72,8 +74,7 @@ onMounted(async () => {
     loading.value = false
   }).catch((err) => {
     console.log(err)
-  }).finally(
-  )
+  }).finally()
 })
 
 function newHoliday () {

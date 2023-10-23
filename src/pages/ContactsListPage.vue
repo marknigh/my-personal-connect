@@ -1,6 +1,5 @@
 <template>
   <template v-if="!loading">
-    <q-page padding>
       <q-table
         flat
         title="Contacts"
@@ -25,7 +24,7 @@
         </div>
         <q-space />
         <div class="col-2">
-          <q-input ref="startDateRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputStartDate" label="Start Date" :rules="[val => !!val || 'Field is required']">
+          <q-input ref="startDateRef" class="q-pa-sm" lazy-rules="ondemand" dense v-model="inputStartDate" label="Start Date" :rules="[val => !!val || 'Field is required']">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -40,7 +39,7 @@
           </q-input>
         </div>
         <div class="col-2">
-          <q-input ref="endDateRef" class="q-pa-xs" lazy-rules="ondemand" dense v-model="inputEndDate" label="End Date" :rules="endDateRules">
+          <q-input ref="endDateRef" class="q-pa-sm" lazy-rules="ondemand" dense v-model="inputEndDate" label="End Date" :rules="endDateRules">
             <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -96,7 +95,6 @@
         </q-tr>
       </template>
     </q-table>
-  </q-page>
   </template>
   <template v-else>
     <q-page class="flex flex-center">
