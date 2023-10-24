@@ -7,7 +7,7 @@ const userStore = useUserStore()
 
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
-export default boot(async (/* { app, router, ... } */) => {
+export default boot(async ({ router }) => {
   Amplify.configure(awsconfig)
 
   Hub.listen('auth', ({ payload: { event, data } }) => {
@@ -16,6 +16,10 @@ export default boot(async (/* { app, router, ... } */) => {
         console.info('signIn from Hub Listen')
         getUser().then((userData) => {
           userStore.user = userData
+          router.push({ path: '/metrics' })
+        }).catch(() => {
+          console.log('not signed in')
+          router.push({ path: '/signin' })
         })
         break
       case 'cognitoHostedUI':
@@ -25,6 +29,8 @@ export default boot(async (/* { app, router, ... } */) => {
         break
       case 'signOut':
         console.log('signOut from Hub Listen')
+        userStore.user = null
+        router.push({ path: '/signin' })
         break
       case 'signIn_failure':
       case 'cognitoHostedUI_failure':

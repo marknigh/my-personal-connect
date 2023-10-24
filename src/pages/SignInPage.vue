@@ -127,7 +127,7 @@ async function signIn () {
         verification.value = true
       }
       userStore.user = user.attributes
-      router.push({ path: '/' })
+      router.push({ path: '/metrics' })
     } catch (error) {
       loginError.value = true
       if (error.name === 'NotAuthorizedException') {

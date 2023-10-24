@@ -194,28 +194,19 @@
 
 <script setup>
 import { useUserStore } from 'stores/user'
-import { ref, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { Auth } from 'aws-amplify'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 
 const leftDrawerOpen = ref(false)
 
 const userStore = useUserStore()
-const router = useRouter()
+// const router = useRouter()
 
 async function SignOut () {
-  try {
-    Auth.signOut().then(() => {
-      router.push('/signin')
-    })
-  } catch (error) {
-    console.log('error signing out: ', error)
-  }
+  Auth.signOut()
 }
 
-onUnmounted(() => {
-  userStore.user = {}
-})
 </script>
 
 <style lang="scss" scoped>
