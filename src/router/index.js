@@ -1,7 +1,7 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
-import { useUserStore } from '../stores/user'
+import { Auth } from 'aws-amplify'
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -27,11 +27,15 @@ export default route(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach(async (to, from) => {
-    const userStore = useUserStore()
-
-    if (to.meta.requiresAuth && Object.keys(userStore.user).length === 0) {
-      return ({ path: '/signin' })
+    if (to.meta.requiresAuth && to.name !== 'signin') {
+      try {
+        const currentUser = await Auth.currentAuthenticatedUser({ bypassCache: true })
+        if (!currentUser) return { name: 'signin' }
+      } catch (err) {
+        return { name: 'signin' }
+      }
     }
   })
+
   return Router
 })

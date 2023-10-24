@@ -28,7 +28,7 @@ const routes = [
       { path: '/holidaydetails/:holidayId?', component: () => import('pages/HolidayDetailsPage.vue') }
     ]
   },
-  { path: '/signin', component: () => import('src/pages/SignInPage.vue') },
+  { path: '/signin', name: 'signin', component: () => import('src/pages/SignInPage.vue') },
   { path: '/signup', component: () => import('pages/SignUpPage.vue') },
   { path: '/verification', name: 'verification', component: () => import('pages/VerficationCodePage.vue'), props: true },
   { path: '/forgotpassword', name: 'forgotpassword', component: () => import('pages/ForgotPasswordPage.vue'), props: true },

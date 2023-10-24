@@ -15,8 +15,8 @@
           My Personal Amazon Connect
         </q-toolbar-title>
 
-        <div class="q-mr-md">
-          Hello<span v-if="userStore.user.attributes.given_name">, {{  userStore.user.attributes.given_name }} </span>
+        <div v-if="userStore.user" class="q-mr-md">
+          <span v-if="userStore.user.attributes.given_name"> Hello, {{  userStore.user.attributes.given_name }} </span>
         </div>
 
         <div>
@@ -204,7 +204,11 @@ const userStore = useUserStore()
 // const router = useRouter()
 
 async function SignOut () {
-  Auth.signOut()
+  try {
+    await Auth.signOut()
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 </script>
