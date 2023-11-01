@@ -125,6 +125,7 @@ async function GetRPDetails (routingProfile) {
   try {
     const DescribeRoutingProfileResponse = await client.send(new DescribeRoutingProfileCommand(input))
     routingProfileDetails.value = DescribeRoutingProfileResponse.RoutingProfile
+    console.log(routingProfileDetails.value)
   } catch (error) {
     console.log('Error retrieving user list: ', error)
   }

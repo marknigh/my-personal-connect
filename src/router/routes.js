@@ -25,7 +25,8 @@ const routes = [
       { path: '/contactdetails/:contactid', name: 'contactdetails', component: () => import('pages/ContactDetailsPage.vue') },
       { path: '/buckets', component: () => import('pages/GetS3BucketPage.vue') },
       { path: '/holidays', component: () => import('pages/HolidayListPage.vue') },
-      { path: '/holidaydetails/:holidayId?', component: () => import('pages/HolidayDetailsPage.vue') }
+      { path: '/holidaydetails/:holidayId?', component: () => import('pages/HolidayDetailsPage.vue') },
+      { path: '/quickconnects', component: () => import('pages/QuickConnectsListPage.vue') }
     ]
   },
   { path: '/signin', name: 'signin', component: () => import('src/pages/SignInPage.vue') },

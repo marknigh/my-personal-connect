@@ -143,6 +143,16 @@
           </q-item-section>
         </q-item>
 
+        <q-item clickable :to="{ path: '/quickconnects'}">
+          <q-item-section avatar>
+            <q-icon color="blue" name="call" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Quick Connects</q-item-label>
+            <q-item-label caption>Quick Connects</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <q-item clickable :to="{ path: '/listusers'}">
           <q-item-section avatar>
             <q-icon color="blue" name="groups_2" />
