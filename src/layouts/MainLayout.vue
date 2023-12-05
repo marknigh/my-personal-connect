@@ -34,14 +34,41 @@
       <q-list>
         <q-item-label header class="text-center text-bold">Menu</q-item-label>
 
-        <q-item clickable :to="{ path: '/metrics'}">
+        <q-item clickable>
           <q-item-section avatar>
-            <q-icon color="blue" name="insights" />
+          <q-icon color="blue" name="dashboard" />
+        </q-item-section>
+
+          <q-item-section>Dashboards</q-item-section>
+          <q-item-section side>
+            <q-icon name="keyboard_arrow_right" />
           </q-item-section>
-          <q-item-section>
-            <q-item-label>RealTime Metrics</q-item-label>
-            <q-item-label caption>RealTime Metrics</q-item-label>
-          </q-item-section>
+
+          <q-menu anchor="top right" self="top left">
+            <q-list>
+
+              <q-item clickable :to="{ path: '/metrics'}">
+                <q-item-section avatar>
+                <q-icon color="blue" name="insights" />
+                </q-item-section>
+                <q-item-section>
+                <q-item-label>RealTime Metrics</q-item-label>
+                <q-item-label caption>RealTime Metrics</q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-item clickable :to="{ path: '/agentstate'}">
+                <q-item-section avatar>
+                <q-icon color="blue" name="info" />
+                </q-item-section>
+                <q-item-section>
+                <q-item-label>Agent State Dashboard</q-item-label>
+                <q-item-label caption>Agent State Dashboard</q-item-label>
+                </q-item-section>
+              </q-item>
+
+            </q-list>
+          </q-menu>
         </q-item>
 
         <q-item clickable>

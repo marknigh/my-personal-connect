@@ -74,7 +74,6 @@ const thumbStyle = ref({
 onMounted(() => {
   try {
     Auth.currentCredentials().then(async (credentials) => {
-      // console.log('currentCredentials: ', credentials)
       creds.value = credentials
       GetUserList()
     })
