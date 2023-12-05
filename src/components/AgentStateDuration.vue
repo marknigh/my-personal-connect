@@ -23,7 +23,7 @@ function displayTimer () {
   const minutes = Math.floor((timer.value % 3600) / 60)
   const remainingSeconds = timer.value % 60
   if (hours > 0) {
-    return `${hours} hours : ${minutes} minutes: ${timer.value}`
+    return `${hours}:${minutes}:${remainingSeconds}`
   } else if (minutes > 1) {
     return `${minutes}:${remainingSeconds}`
   } else {

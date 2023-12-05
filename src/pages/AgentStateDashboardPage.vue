@@ -18,8 +18,9 @@
         <q-list>
           <q-item v-for="agent in agentStatus" :key="agent.id">
             <q-item-section> {{ fullName(agent.firstName, agent.lastName) }}</q-item-section>
-            <agent-state-status :status="agent.currentState" :creds="creds" :instanceId="instanceStore.Id"/>
+            <agent-state-status :currentState="agent.currentState" :agentStates="agentStates" />
             <agent-state-duration :status="agent.currentState" :timeStamp="agent.currentStartTimestamp" />
+            <agent-state-change-state :agentStates="agentStates" :agent="agent"/>
           </q-item>
         </q-list>
       </q-page>
@@ -28,11 +29,12 @@
 
 <script setup>
 import { Auth, API } from 'aws-amplify'
-import { ConnectClient, GetCurrentUserDataCommand, DescribeUserHierarchyStructureCommand, ListUserHierarchyGroupsCommand, DescribeUserHierarchyGroupCommand, DescribeUserCommand } from '@aws-sdk/client-connect'
+import { ConnectClient, ListAgentStatusesCommand, GetCurrentUserDataCommand, DescribeUserHierarchyStructureCommand, ListUserHierarchyGroupsCommand, DescribeUserHierarchyGroupCommand, DescribeUserCommand } from '@aws-sdk/client-connect'
 import { useInstanceStore } from '../stores/instance'
 import AgentStateHierarchy from '../components/AgentStateHierarchy.vue'
 import AgentStateStatus from '../components/AgentStateStatus.vue'
 import AgentStateDuration from '../components/AgentStateDuration.vue'
+import AgentStateChangeState from 'src/components/AgentStateChangeState.vue'
 import { onMounted, ref, onUnmounted, reactive } from 'vue'
 import * as subscriptions from '../graphql/subscriptions'
 
@@ -44,7 +46,7 @@ let sub
 const agentStatus = ref([])
 const UserHierarchyGroups = ref([])
 const levelIds = reactive({})
-// const userDataList = ref([])
+const agentStates = ref([])
 
 onMounted(async () => {
   try {
@@ -52,9 +54,10 @@ onMounted(async () => {
       creds.value = credentials
       GetHierarchyStructure()
       GetHierarchyGroups()
+      GetAgentStatus()
       sub = API.graphql({ query: subscriptions.onAgentState }).subscribe({
         next: ({ provider, value }) => {
-          console.log('next: ', value)
+          // console.log('next: ', value)
           const index = agentStatus.value.findIndex((element) => element.agentARN === value.data.onAgentState.agentARN)
           if (index >= 0) {
             agentStatus.value.splice(index, 1, value.data.onAgentState)
@@ -118,7 +121,7 @@ async function GetHierarchyStructure () {
 
   try {
     const DescribeUserHierarchyStructureResponse = await client.send(command)
-    console.log('DescribeUserHierarchyStructureResponse: ', DescribeUserHierarchyStructureResponse)
+    // console.log('DescribeUserHierarchyStructureResponse: ', DescribeUserHierarchyStructureResponse)
     hierarchyStructure.value = DescribeUserHierarchyStructureResponse.HierarchyStructure
   } catch (error) {
     console.log('Error retrieving hours of Describe User Hierarchy Structure Response: ', error)
@@ -214,6 +217,7 @@ async function GetCurrentUserData () {
       const command = new DescribeUserCommand(input)
       try {
         const DescribeUserResponse = await client.send(command)
+        // console.log('DescribeUserResponse: ', DescribeUserResponse)
         const agentObject = {
           agentARN: element.User.Arn,
           currentState: element.Status.StatusName,
@@ -236,48 +240,35 @@ async function GetCurrentUserData () {
   }
 }
 
-// async function searchUsers () {
-//   GetCurrentUserData()
-//   const credentials = {
-//     accessKeyId: creds.value.accessKeyId,
-//     secretAccessKey: creds.value.secretAccessKey,
-//     sessionToken: creds.value.sessionToken
-//   }
+async function GetAgentStatus () {
+  const credentials = {
+    accessKeyId: creds.value.accessKeyId,
+    secretAccessKey: creds.value.secretAccessKey,
+    sessionToken: creds.value.sessionToken
+  }
 
-//   const client = new ConnectClient({
-//     region: 'us-east-1',
-//     credentials
-//   })
+  const client = new ConnectClient({
+    region: 'us-east-1',
+    credentials
+  })
 
-//   const input = {
-//     InstanceId: instanceStore.Id,
-//     SearchCriteria: {
-//       HierarchyGroupCondition: {
-//         value: levelIds.LevelFour.id,
-//         HierarchyGroupMatchType: 'EXACT'
-//       }
-//     }
-//   }
+  const input = { // ListAgentStatusRequest
+    InstanceId: instanceStore.Id, // required
+    AgentStatusTypes: ['ROUTABLE', 'CUSTOM', 'OFFLINE']
+  }
 
-//   const command = new SearchUsersCommand(input)
+  const command = new ListAgentStatusesCommand(input)
 
-//   try {
-//     const SearchUsersResponse = await client.send(command)
-//     console.log('SearchUsersResponse: ', SearchUsersResponse)
-//     SearchUsersResponse.Users.forEach((element) => {
-//       agentStatus.value.push({
-//         agentARN: element.Arn,
-//         firstName: element.IdentityInfo.FirstName,
-//         lastName: element.IdentityInfo.LastName,
-//         currentState: 'unknown',
-//         currentStartTimestamp: new Date()
-
-//       })
-//     })
-//   } catch (error) {
-//     console.log('Error retrieving hours of Describe User Hierarchy Structure Response: ', error)
-//   }
-// }
+  try {
+    const ListAgentStatusResponse = await client.send(command)
+    console.log('ListAgentStatusResponse: ', ListAgentStatusResponse.AgentStatusSummaryList)
+    ListAgentStatusResponse.AgentStatusSummaryList.forEach((element) => {
+      agentStates.value.push(element)
+    })
+  } catch (error) {
+    console.log('Error retrieving hours of Describe User Hierarchy Structure Response: ', error)
+  }
+}
 
 </script>
 
