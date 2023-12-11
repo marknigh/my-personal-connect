@@ -17,3 +17,17 @@ export const getState = /* GraphQL */ `
     }
   }
 `;
+export const getProfile = /* GraphQL */ `
+  query GetProfile($id: String) {
+    getProfile(id: $id) {
+      agentStatus {
+        color
+        id
+        name
+        __typename
+      }
+      id
+      __typename
+    }
+  }
+`;
