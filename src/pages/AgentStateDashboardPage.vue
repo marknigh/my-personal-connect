@@ -8,13 +8,13 @@
         <div class="row">
 
           <template v-for="(hs, index) in hierarchyStructure" :key="hs.Id">
-            <agent-state-hierarchy :hierarchyStructure="hierarchyStructure" :UserHierarchyGroups="UserHierarchyGroups" :index="index" :levelIds="levelIds" @valueChange="valueChange"/>
+            <agent-state-hierarchy :hierarchyStructure="hierarchyStructure[index]" :UserHierarchyGroups="UserHierarchyGroups" :index="index" :levelIds="levelIds" @valueChange="valueChange"/>
           </template>
           <div class="q-pa-xs"><q-btn color="primary" label="filter" flat @click="GetCurrentUserData"/></div>
         </div>
       </div>
     </div>
-      <q-page padding>
+      <q-page v-if="agentStatus.length > 0" padding>
         <q-list>
           <q-item v-for="agent in agentStatus" :key="agent.id">
             <q-item-section> {{ fullName(agent.firstName, agent.lastName) }}</q-item-section>
@@ -24,10 +24,14 @@
           </q-item>
         </q-list>
       </q-page>
+      <q-page v-else class="flex flex-center">
+        <p class="text-h6">{{ noAgentStatus }}</p>
+      </q-page>
   </q-page>
 </template>
 
 <script setup>
+import { onMounted, ref, onUnmounted, reactive } from 'vue'
 import { Auth, API } from 'aws-amplify'
 import { ConnectClient, ListAgentStatusesCommand, GetCurrentUserDataCommand, DescribeUserHierarchyStructureCommand, ListUserHierarchyGroupsCommand, DescribeUserHierarchyGroupCommand, DescribeUserCommand } from '@aws-sdk/client-connect'
 import { useInstanceStore } from '../stores/instance'
@@ -35,7 +39,6 @@ import AgentStateHierarchy from '../components/AgentStateHierarchy.vue'
 import AgentStateStatus from '../components/AgentStateStatus.vue'
 import AgentStateDuration from '../components/AgentStateDuration.vue'
 import AgentStateChangeState from 'src/components/AgentStateChangeState.vue'
-import { onMounted, ref, onUnmounted, reactive } from 'vue'
 import * as subscriptions from '../graphql/subscriptions'
 
 const instanceStore = useInstanceStore()
@@ -47,6 +50,7 @@ const agentStatus = ref([])
 const UserHierarchyGroups = ref([])
 const levelIds = reactive({})
 const agentStates = ref([])
+const noAgentStatus = ref('')
 
 onMounted(async () => {
   try {
@@ -82,14 +86,17 @@ onUnmounted(() => {
 function valueChange (value) {
   const key = Object.keys(value)[0]
   switch (key) {
-    case ('LevelOne'):
-      delete levelIds.LevelTwo
-      delete levelIds.LevelThree
-      delete levelIds.LevelFour
+    case ('0'):
+      delete levelIds[1]
+      delete levelIds[2]
+      delete levelIds[3]
       break
-    case ('LevelTwo'):
-      delete levelIds.LevelThree
-      delete levelIds.LevelFour
+    case ('1'):
+      delete levelIds[2]
+      delete levelIds[3]
+      break
+    case ('2'):
+      delete levelIds[3]
       break
     default:
       break
@@ -121,8 +128,12 @@ async function GetHierarchyStructure () {
 
   try {
     const DescribeUserHierarchyStructureResponse = await client.send(command)
-    // console.log('DescribeUserHierarchyStructureResponse: ', DescribeUserHierarchyStructureResponse)
-    hierarchyStructure.value = DescribeUserHierarchyStructureResponse.HierarchyStructure
+    console.log('DescribeUserHierarchyStructureResponse: ', DescribeUserHierarchyStructureResponse)
+    const hierarchyStructureResponse = DescribeUserHierarchyStructureResponse.HierarchyStructure
+    hierarchyStructure.value = Object.entries(hierarchyStructureResponse).sort((a, b) => {
+      console.log('a, b: ', (a[1].Arn).slice(-1), (b[1].Arn).slice(-1))
+      return (a[1].Arn).slice(-1) - (b[1].Arn).slice(-1)
+    })
   } catch (error) {
     console.log('Error retrieving hours of Describe User Hierarchy Structure Response: ', error)
   }
@@ -173,19 +184,19 @@ async function GetCurrentUserData () {
   let searchLevel = ''
   switch (level) {
     case 1:
-      searchLevel = levelIds.LevelOne.id
+      searchLevel = levelIds['0'].id
       break
     case 2:
-      searchLevel = levelIds.LevelTwo.id
+      searchLevel = levelIds['1'].id
       break
     case 3:
-      searchLevel = levelIds.LevelThree.id
+      searchLevel = levelIds['2'].id
       break
     case 4:
-      searchLevel = levelIds.LevelFour.id
+      searchLevel = levelIds['3'].id
       break
     case 5:
-      searchLevel = levelIds.LevelFive.id
+      searchLevel = levelIds['4'].id
       break
   }
   const credentials = {
@@ -209,32 +220,37 @@ async function GetCurrentUserData () {
   const command = new GetCurrentUserDataCommand(input)
   try {
     const GetCurrentUserDataResponse = await client.send(command)
-    GetCurrentUserDataResponse.UserDataList.forEach(async (element) => {
-      const input = {
-        InstanceId: instanceStore.Id,
-        UserId: element.User.Id
-      }
-      const command = new DescribeUserCommand(input)
-      try {
-        const DescribeUserResponse = await client.send(command)
-        // console.log('DescribeUserResponse: ', DescribeUserResponse)
-        const agentObject = {
-          agentARN: element.User.Arn,
-          currentState: element.Status.StatusName,
-          currentStartTimestamp: element.Status.StatusStartTimestamp,
-          firstName: DescribeUserResponse.User.IdentityInfo.FirstName,
-          lastName: DescribeUserResponse.User.IdentityInfo.LastName
+    // console.log('GetCurrentUserDataResponse: ', GetCurrentUserDataResponse)
+    if (GetCurrentUserDataResponse.ApproximateTotalCount > 0) {
+      GetCurrentUserDataResponse.UserDataList.forEach(async (element) => {
+        const input = {
+          InstanceId: instanceStore.Id,
+          UserId: element.User.Id
         }
-        const index = agentStatus.value.findIndex((e) => e.agentARN === element.User.Arn)
-        if (index >= 0) {
-          agentStatus.value.splice(index, 1, agentObject)
-        } else {
-          agentStatus.value.push(agentObject)
+        const command = new DescribeUserCommand(input)
+        try {
+          const DescribeUserResponse = await client.send(command)
+          console.log('DescribeUserResponse: ', DescribeUserResponse)
+          const agentObject = {
+            agentARN: element.User.Arn,
+            currentState: element.Status.StatusName,
+            currentStartTimestamp: element.Status.StatusStartTimestamp,
+            firstName: DescribeUserResponse.User.IdentityInfo.FirstName,
+            lastName: DescribeUserResponse.User.IdentityInfo.LastName
+          }
+          const index = agentStatus.value.findIndex((e) => e.agentARN === element.User.Arn)
+          if (index >= 0) {
+            agentStatus.value.splice(index, 1, agentObject)
+          } else {
+            agentStatus.value.push(agentObject)
+          }
+        } catch (error) {
+          console.log('Error retrieving DescribeUserResponse: ', error)
         }
-      } catch (error) {
-        console.log('Error retrieving DescribeUserResponse: ', error)
-      }
-    })
+      })
+    } else {
+      noAgentStatus.value = 'No Agents Available'
+    }
   } catch (error) {
     console.log('Error retrieving GetCurrentUserDataResponse: ', error)
   }
@@ -261,12 +277,12 @@ async function GetAgentStatus () {
 
   try {
     const ListAgentStatusResponse = await client.send(command)
-    console.log('ListAgentStatusResponse: ', ListAgentStatusResponse.AgentStatusSummaryList)
+    // console.log('ListAgentStatusResponse: ', ListAgentStatusResponse.AgentStatusSummaryList)
     ListAgentStatusResponse.AgentStatusSummaryList.forEach((element) => {
       agentStates.value.push(element)
     })
   } catch (error) {
-    console.log('Error retrieving hours of Describe User Hierarchy Structure Response: ', error)
+    console.log('Error retrieving list agent statuses response: ', error)
   }
 }
 
