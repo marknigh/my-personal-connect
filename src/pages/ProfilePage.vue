@@ -73,6 +73,8 @@ import { useProfileStore } from '../stores/profile'
 import { useUserStore } from '../stores/user'
 import { ConnectClient, ListAgentStatusesCommand } from '@aws-sdk/client-connect'
 import ProfileAgentStatusColor from 'src/components/ProfileAgentStatusColor.vue'
+import { getProfile } from '../graphql/queries'
+import { addProfile } from '../graphql/mutations'
 
 const instanceStore = useInstanceStore()
 const router = useRouter()
@@ -173,16 +175,16 @@ async function UpdateAgentStatus (status, color) {
   } else {
     agentProfileConfig.value.agentStatus.push({ id: status.Id, name: status.Name, color })
   }
-  const createProfile = /* GraphQL */ `
-  mutation addProfile ($ProfileInput: ProfileInput) {
-    addProfile(ProfileInput: $ProfileInput) {
-      id
-    }
-  }`
+  // const createProfile = /* GraphQL */ `
+  // mutation addProfile ($ProfileInput: ProfileInput) {
+  //   addProfile(ProfileInput: $ProfileInput) {
+  //     id
+  //   }
+  // }`
 
   try {
     const response = await API.graphql({
-      query: createProfile,
+      query: addProfile,
       variables: {
         ProfileInput: {
           id: agentProfileConfig.value.Id,
@@ -197,17 +199,17 @@ async function UpdateAgentStatus (status, color) {
 }
 
 async function GetProfile () {
-  const getProfile = /* GraphQL */ `
-    query GetProfile ($id: String){
-      getProfile (id: $id) {
-        id
-        agentStatus {
-          color
-          id
-          name
-        }
-      }
-    }`
+  // const getProfile = /* GraphQL */ `
+  //   query GetProfile ($id: String){
+  //     getProfile (id: $id) {
+  //       id
+  //       agentStatus {
+  //         color
+  //         id
+  //         name
+  //       }
+  //     }
+  //   }`
 
   try {
     const response = await API.graphql({
