@@ -4,13 +4,17 @@
 export const addProfile = /* GraphQL */ `
   mutation AddProfile($ProfileInput: ProfileInput) {
     addProfile(ProfileInput: $ProfileInput) {
+      id
       agentStatus {
-        color
         id
         name
+        color
         __typename
       }
-      id
+      __typename {
+        id
+        __typename
+      }
       __typename
     }
   }
@@ -18,13 +22,17 @@ export const addProfile = /* GraphQL */ `
 export const updateProfile = /* GraphQL */ `
   mutation UpdateProfile($ProfileInput: ProfileInput) {
     updateProfile(ProfileInput: $ProfileInput) {
+      id
       agentStatus {
-        color
         id
         name
+        color
         __typename
       }
-      id
+      __typename {
+        id
+        __typename
+      }
       __typename
     }
   }

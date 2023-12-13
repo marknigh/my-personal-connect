@@ -20,13 +20,17 @@ export const getState = /* GraphQL */ `
 export const getProfile = /* GraphQL */ `
   query GetProfile($id: String) {
     getProfile(id: $id) {
+      id
       agentStatus {
-        color
         id
         name
+        color
         __typename
       }
-      id
+      __typename {
+        id
+        __typename
+      }
       __typename
     }
   }

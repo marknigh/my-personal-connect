@@ -11,9 +11,9 @@
       <q-icon size="xs" name="colorize" class="cursor-pointer">
         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
           <q-color
+            format-model="hex"
             no-header
             no-footer
-            default-view="palette"
             v-model="color.color"
             @update:model-value="changeInColor"
         />

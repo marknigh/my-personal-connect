@@ -26,16 +26,14 @@
       <q-list padding>
         <p class="text-h6 text-weight-medium q-mt-md">Agent Status Colors</p>
         <q-item>
-          <template v-if="agentStatuses.length > 0">
-            <q-item-section class="q-gutter-xl" v-for="status in agentStatuses" :key="status.Id">
-              <profile-agent-status-color
-                :status="status"
-                :statusHexColor="statusHexColor(status.Id)"
-                @changeInColor="UpdateAgentStatus"
-              >
-              </profile-agent-status-color>
-          </q-item-section>
-        </template>
+          <q-item-section class="q-gutter-xl" v-for="status in agentStatuses" :key="status.Id">
+            <profile-agent-status-color
+              :status="status"
+              :statusHexColor="statusHexColor(status.Id)"
+              @changeInColor="SaveColorStatus"
+            >
+            </profile-agent-status-color>
+        </q-item-section>
       </q-item>
       <q-separator spaced />
     </q-list>
@@ -73,8 +71,8 @@ import { useProfileStore } from '../stores/profile'
 import { useUserStore } from '../stores/user'
 import { ConnectClient, ListAgentStatusesCommand } from '@aws-sdk/client-connect'
 import ProfileAgentStatusColor from 'src/components/ProfileAgentStatusColor.vue'
-import { getProfile } from '../graphql/queries'
-import { addProfile } from '../graphql/mutations'
+// import { getProfile } from '../graphql/queries'
+// import { addProfile } from '../graphql/mutations'
 
 const instanceStore = useInstanceStore()
 const router = useRouter()
@@ -104,8 +102,13 @@ onBeforeMount(() => {
 })
 
 function statusHexColor (statusId) {
-  const color = agentProfileConfig.value.agentStatus.find((element) => element.id === statusId)
-  return color
+  const agentStatusColor = agentProfileConfig.value.agentStatus.find((element) => element.id === statusId)
+  if (agentStatusColor) {
+    return agentStatusColor
+  } else {
+    const defaultColor = { color: '#00FF00' }
+    return defaultColor
+  }
 }
 
 async function saveProfile () {
@@ -167,7 +170,7 @@ async function GetAgentStatuses () {
   }
 }
 
-async function UpdateAgentStatus (status, color) {
+async function SaveColorStatus (status, color) {
   // console.log('UpdateAgentStatus: ', status, color)
   const agentStatusElement = agentProfileConfig.value.agentStatus.findIndex((element) => element.id === status.Id)
   if (agentStatusElement >= 0) {
@@ -175,20 +178,21 @@ async function UpdateAgentStatus (status, color) {
   } else {
     agentProfileConfig.value.agentStatus.push({ id: status.Id, name: status.Name, color })
   }
-  // const createProfile = /* GraphQL */ `
-  // mutation addProfile ($ProfileInput: ProfileInput) {
-  //   addProfile(ProfileInput: $ProfileInput) {
-  //     id
-  //   }
-  // }`
+  const createProfile = /* GraphQL */ `
+  mutation addProfile ($ProfileInput: ProfileInput) {
+    addProfile(ProfileInput: $ProfileInput) {
+      id
+    }
+  }`
 
   try {
     const response = await API.graphql({
-      query: addProfile,
+      query: createProfile,
       variables: {
+        id: agentProfileConfig.value.Id,
         ProfileInput: {
-          id: agentProfileConfig.value.Id,
-          agentStatus: agentProfileConfig.value.agentStatus
+          agentStatus: agentProfileConfig.value.agentStatus,
+          id: agentProfileConfig.value.Id
         }
       }
     })
@@ -199,23 +203,24 @@ async function UpdateAgentStatus (status, color) {
 }
 
 async function GetProfile () {
-  // const getProfile = /* GraphQL */ `
-  //   query GetProfile ($id: String){
-  //     getProfile (id: $id) {
-  //       id
-  //       agentStatus {
-  //         color
-  //         id
-  //         name
-  //       }
-  //     }
-  //   }`
+  const getProfile = /* GraphQL */ `
+    query GetProfile ($id: String){
+      getProfile (id: $id) {
+        id
+        agentStatus {
+          color
+          id
+          name
+        }
+      }
+    }`
 
   try {
     const response = await API.graphql({
       query: getProfile,
       variables: {
-        id: agentProfileConfig.value.Id
+        id: agentProfileConfig.value.Id,
+        __typename: 'GetProfile'
       }
     })
     console.log('response: ', response)
