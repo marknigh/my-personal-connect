@@ -18,7 +18,7 @@
               </q-item-section>
 
               <q-item-section side>
-                <q-icon name="info" color="green" />
+                <q-icon name="info" color="positive" />
               </q-item-section>
             </q-item>
           </q-list>

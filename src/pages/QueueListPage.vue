@@ -17,7 +17,7 @@
             </q-item-section>
 
             <q-item-section side>
-              <q-icon name="info" color="green" />
+              <q-icon name="info" color="secondary" />
             </q-item-section>
           </q-item>
         </q-list>
@@ -28,7 +28,7 @@
           <p class="no-margin text-h5 text-bold">
             <q-icon
               :name="queueInfo.Status === 'ENABLED' ? 'check_circle' : 'cancel'"
-              :color="queueInfo.Status === 'ENABLED' ? 'green' : 'red'"
+              :color="queueInfo.Status === 'ENABLED' ? 'positive' : 'warning'"
             >
             </q-icon>
             {{ queueInfo.Name }}

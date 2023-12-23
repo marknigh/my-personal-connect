@@ -61,7 +61,7 @@ onMounted(async () => {
       GetAgentStatus()
       sub = API.graphql({ query: subscriptions.onAgentState }).subscribe({
         next: ({ provider, value }) => {
-          // console.log('next: ', value)
+          console.log('next: ', value)
           const index = agentStatus.value.findIndex((element) => element.agentARN === value.data.onAgentState.agentARN)
           if (index >= 0) {
             agentStatus.value.splice(index, 1, value.data.onAgentState)

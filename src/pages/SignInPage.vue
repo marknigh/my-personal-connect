@@ -17,7 +17,7 @@
                 v-model="username"
               >
                 <template #before>
-                  <q-icon name="account_circle" color="primary"/>
+                  <q-icon name="o_account_circle" color="primary"/>
                 </template>
               </q-input>
 
@@ -30,7 +30,7 @@
                 v-model="password"
               >
                 <template #before>
-                  <q-icon name="lock" color="primary"/>
+                  <q-icon name="o_lock" color="primary"/>
                 </template>
               </q-input>
 
@@ -75,7 +75,7 @@
             label="Password"
             v-model="password">
               <template #before>
-                <q-icon name="eva-lock-outline" />
+                <q-icon name="o_lock" />
               </template>
           </q-input>
 

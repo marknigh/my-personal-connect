@@ -8,7 +8,6 @@
           round
           @click="leftDrawerOpen = !leftDrawerOpen"
           icon="menu"
-          aria-label="Menu"
         />
 
         <q-toolbar-title class="text-center">
@@ -29,14 +28,13 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      content-class="bg-grey-2"
     >
       <q-list>
         <q-item-label header class="text-center text-bold">Menu</q-item-label>
 
         <q-item clickable>
           <q-item-section avatar>
-          <q-icon color="blue" name="dashboard" />
+          <q-icon color="primary" name="o_dashboard" />
         </q-item-section>
 
           <q-item-section>Dashboards</q-item-section>
@@ -49,17 +47,17 @@
 
               <q-item clickable :to="{ path: '/metrics'}">
                 <q-item-section avatar>
-                <q-icon color="blue" name="insights" />
+                <q-icon color="secondary" name="o_insights" />
                 </q-item-section>
                 <q-item-section>
-                <q-item-label>RealTime Metrics</q-item-label>
-                <q-item-label caption>RealTime Metrics</q-item-label>
+                <q-item-label>Dashboard</q-item-label>
+                <q-item-label caption>RealTime and Historical Metrics</q-item-label>
                 </q-item-section>
               </q-item>
 
               <q-item clickable :to="{ path: '/agentstate'}">
                 <q-item-section avatar>
-                <q-icon color="blue" name="info" />
+                <q-icon color="secondary" name="o_info" />
                 </q-item-section>
                 <q-item-section>
                 <q-item-label>Agent State Dashboard</q-item-label>
@@ -73,19 +71,19 @@
 
         <q-item clickable>
           <q-item-section avatar>
-            <q-icon color="blue" name="timelapse" />
+            <q-icon color="primary" name="timelapse" />
           </q-item-section>
 
           <q-item-section>Hours Of Operation</q-item-section>
             <q-item-section side>
               <q-icon name="keyboard_arrow_right" />
-          </q-item-section>
+            </q-item-section>
 
             <q-menu anchor="top right" self="top left">
               <q-list>
                 <q-item clickable :to="{ path: '/hoursofoperations'}">
                   <q-item-section avatar>
-                    <q-icon color="blue" name="schedule" />
+                    <q-icon color="secondary" name="o_schedule" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Hours of Operations - Connect</q-item-label>
@@ -95,7 +93,7 @@
 
                 <q-item clickable :to="{ path: '/calendarview'}">
                   <q-item-section avatar>
-                    <q-icon color="blue" name="calendar_month" />
+                    <q-icon color="secondary" name="o_calendar_month" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Calendar View - Connect</q-item-label>
@@ -105,7 +103,7 @@
 
                 <q-item clickable :to="{ path: '/customschedules'}">
                   <q-item-section avatar>
-                    <q-icon color="blue" name="date_range" />
+                    <q-icon color="secondary" name="o_date_range" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Custom Schedule</q-item-label>
@@ -114,7 +112,7 @@
                 </q-item>
                 <q-item clickable :to="{ path: '/holidays'}">
                   <q-item-section avatar>
-                    <q-icon color="blue" name="insert_invitation" />
+                    <q-icon color="secondary" name="insert_invitation" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Holiday Schedule</q-item-label>
@@ -127,7 +125,7 @@
 
         <q-item clickable>
           <q-item-section avatar>
-            <q-icon color="blue" name="directions" />
+            <q-icon color="primary" name="o_directions" />
           </q-item-section>
 
           <q-item-section>Call Flows</q-item-section>
@@ -139,7 +137,7 @@
               <q-list>
                 <q-item clickable :to="{ path: '/contactflows'}">
                   <q-item-section avatar>
-                    <q-icon color="blue" name="account_tree" />
+                    <q-icon color="secondary" name="o_account_tree" />
                   </q-item-section>
                   <q-item-section>
                     <q-item-label>Contact Flows - Custom Schedule</q-item-label>
@@ -152,7 +150,7 @@
         </q-item>
         <q-item clickable :to="{ path: '/contacts'}">
           <q-item-section avatar>
-            <q-icon color="blue" name="contacts" />
+            <q-icon color="primary" name="o_contacts" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Contacts</q-item-label>
@@ -162,7 +160,7 @@
 
         <q-item clickable :to="{ path: '/queues'}">
           <q-item-section avatar>
-            <q-icon color="blue" name="toc" />
+            <q-icon color="primary" name="o_toc" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Queues</q-item-label>
@@ -172,7 +170,7 @@
 
         <q-item clickable :to="{ path: '/listusers'}">
           <q-item-section avatar>
-            <q-icon color="blue" name="groups_2" />
+            <q-icon color="primary" name="o_groups_2" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Users</q-item-label>
@@ -182,7 +180,7 @@
 
         <q-item clickable :to="{ path: '/routingprofiles'}">
           <q-item-section avatar>
-            <q-icon color="blue" name="directions_bus" />
+            <q-icon color="primary" name="o_directions_bus" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Routing Profiles</q-item-label>
@@ -192,7 +190,7 @@
 
         <q-item clickable :to="{ path: '/menucounts'}">
           <q-item-section avatar>
-            <q-icon color="blue" name="numbers" />
+            <q-icon color="primary" name="o_numbers" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Menu Counts</q-item-label>
@@ -202,7 +200,7 @@
 
         <q-item clickable :to="{ path: '/profile'}">
           <q-item-section avatar>
-            <q-icon color="blue" name="person_outline" />
+            <q-icon color="primary" name="person_outline" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Profile</q-item-label>

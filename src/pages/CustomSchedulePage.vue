@@ -22,7 +22,7 @@
           <q-input filled dense outlined v-model="schedule.timezone" label="TimeZone" />
         </div> -->
       </div>
-      <q-separator spaced="md" color="yellow" style="width: 85%"/>
+      <q-separator spaced="md" color="warning" style="width: 85%"/>
       <template v-for="(dow, index) in schedule.config" :key="index">
         <custom-schedule-time-slots
           :dow="dow"
@@ -31,13 +31,13 @@
           @add-entry="addEntry"
         />
       </template>
-      <q-separator spaced="md" color="yellow" style="width: 70%"/>
+      <q-separator spaced="md" color="warning" style="width: 70%"/>
       <div class="row">
         <div class="q-mr-md">
           <q-btn color="primary" :label="editing ? 'update' : 'save'" @click="submitSchedule" />
         </div>
         <div class="q-mr-md">
-          <q-btn color="red" label="cancel" @click="Cancel" />
+          <q-btn color="negative" label="cancel" @click="Cancel" />
         </div>
         <div class="q-mr-md">
           <q-btn v-if="editing" flat label="delete" @click="DeleteSchedule" />

@@ -1,7 +1,7 @@
 <template>
   <q-item-section>
     <q-item-label>
-      <q-badge rounded :style="{ 'background-color': color}" :label="currentState" text-color="blue-grey-10"/>
+      <q-chip rounded :style="{ 'background-color': color}" :label="currentState" text-color="blue-grey-10" />
     </q-item-label>
   </q-item-section>
 </template>
@@ -15,7 +15,8 @@ const profileStore = useProfileStore()
 
 const color = computed(() => {
   const color = profileStore.agentStatusColors.find((element) => element.name === props.currentState)
-  return color.color
+  // console.log('color: ', color)
+  return color ? color.color : 'blue-grey-10'
 })
 
 </script>

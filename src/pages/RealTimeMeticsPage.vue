@@ -1,17 +1,26 @@
 <template>
   <q-page padding>
-    <div class="row q-gutter-xl">
-      <div class="col-3">
-        <q-select v-model="selectedQueue" label="Queue" :options="queues" option-label="Name" @update:model-value="queueDelayChange()"></q-select>
-      </div>
-      <div class="col-2">
-        <q-select v-model="selectedDelay" :options="secondOptions" label="Delay" @update:model-value="queueDelayChange()"/>
-      </div>
+    <q-toolbar>
+      <q-toolbar-title class="text-center">
+        Real Time Metrics
+      </q-toolbar-title>
+    </q-toolbar>
+    <template v-if="queues.length > 0">
+      <real-time-metrics-toolbar :queues="queues" @queueDelayChange="queueDelayChange"/>
+    </template>
+    <div>
+      <real-time-metrics-cards :metrics="metrics" icon-position="right"/>
     </div>
-    <div v-if="selectedQueue" class="row">
-      <div v-for="met in metrics" :key="met.id" class="col">
-        <metric-cards :name="met.name" :value="met.value" :unit="met.unit"/>
-      </div>
+    <div>
+    <q-toolbar>
+      <q-toolbar-title class="text-center">
+        Historical Charts
+      </q-toolbar-title>
+    </q-toolbar>
+    <div class="row no-wrap">
+      <real-time-metrics-total-contacts-chart />
+      <real-time-metrics-total-abandon-chart />
+    </div>
     </div>
   </q-page>
 </template>
@@ -22,32 +31,76 @@ import { Auth } from 'aws-amplify'
 import { onMounted, ref, onUnmounted } from 'vue'
 import { ConnectClient, GetCurrentMetricDataCommand } from '@aws-sdk/client-connect'
 import getQueues from 'src/assets/GetQueues'
-import MetricCards from '../components/MetricCards.vue'
+import RealTimeMetricsCards from '../components/RealTimeMetricsCards.vue'
 import { useInstanceStore } from '../stores/instance'
-
-const instanceStore = useInstanceStore()
+import RealTimeMetricsToolbar from 'src/components/RealTimeMetricsToolbar.vue'
+import RealTimeMetricsTotalContactsChart from 'src/components/RealTimeMetricsTotalContactsChart.vue'
+import RealTimeMetricsTotalAbandonChart from 'src/components/RealTimeMetricsTotalAbandonChart.vue'
 
 // Vue Ref
+const instanceStore = useInstanceStore()
 const queues = ref([])
-const selectedQueue = ref(null)
 const creds = ref()
-const metrics = ref([])
+const metrics = ref(
+  [{
+    name: 'AGENTS_AVAILABLE',
+    unit: 'COUNT',
+    value: 0,
+    color1: '#03A9F4',
+    color2: '#3e51b5',
+    icon: 'people',
+    displayName: 'Agents Available'
+  },
+  {
+    name: 'AGENTS_ON_CONTACT',
+    unit: 'COUNT',
+    value: 0,
+    color1: '#AB47BC',
+    color2: '#3e51b5',
+    icon: 'mic',
+    displayName: 'Agents On Call'
+  },
+  {
+    name: 'AGENTS_NON_PRODUCTIVE',
+    unit: 'COUNT',
+    value: 0,
+    color1: '#9FCC2E',
+    color2: '#3e51b5',
+    icon: 'workspaces',
+    displayName: 'Agents Non Productive'
+  },
+  {
+    name: 'CONTACTS_IN_QUEUE',
+    unit: 'COUNT',
+    value: 0,
+    color1: '#FA9F1B',
+    color2: '#3e51b5',
+    icon: 'groups',
+    displayName: 'Contacts In Queue'
+
+  },
+  {
+    name: 'SLOTS_ACTIVE',
+    unit: 'COUNT',
+    value: 0,
+    color1: '#25476A',
+    color2: '#3e51b5',
+    icon: 'handshake',
+    displayName: 'Contacts Handled'
+
+  },
+  {
+    name: 'OLDEST_CONTACT_AGE',
+    unit: 'SECONDS',
+    value: 0,
+    color1: '#03A9F4',
+    color2: '#3e51b5',
+    icon: 'timer',
+    displayName: 'Oldest Contacts in Queue'
+
+  }]
+)
 const timer = ref(null)
-const secondOptions = [
-  {
-    label: '1 second',
-    value: 1000
-  },
-  {
-    label: '5 second',
-    value: 5000
-  },
-  {
-    label: '10 second',
-    value: 10000
-  }
-]
-const selectedDelay = ref(secondOptions[1])
 
 // Vue Lifecycle Hooks
 onMounted(() => {
@@ -66,17 +119,14 @@ onUnmounted(() => {
 })
 
 // Vue Methods
-function queueDelayChange () {
+function queueDelayChange (queue, delay) {
   clearInterval(timer.value)
-  metrics.value = []
-  GetMetrics()
   timer.value = setInterval(() => {
-    GetMetrics()
-  }, selectedDelay.value.value)
+    GetMetrics(queue)
+  }, delay)
 }
 
-async function GetMetrics () {
-  metrics.value = []
+async function GetMetrics (queue) {
   const credentials = {
     accessKeyId: creds.value.accessKeyId,
     secretAccessKey: creds.value.secretAccessKey,
@@ -91,48 +141,47 @@ async function GetMetrics () {
   const input = {
     InstanceId: instanceStore.Id,
     Filters: {
-      Queues: [selectedQueue.value.Id],
+      Queues: [queue],
       Channels: ['VOICE']
       // RoutingProfiles: ['Basic Routing Profile']
     },
-    CurrentMetrics: [{
-      Name: 'AGENTS_AVAILABLE',
-      Unit: 'COUNT'
-    },
-    {
-      Name: 'CONTACTS_IN_QUEUE',
-      Unit: 'COUNT'
-    },
-    {
-      Name: 'OLDEST_CONTACT_AGE',
-      Unit: 'SECONDS'
-    }]
+    CurrentMetrics: [
+      {
+        Name: 'AGENTS_AVAILABLE',
+        Unit: 'COUNT'
+      },
+      {
+        Name: 'CONTACTS_IN_QUEUE',
+        Unit: 'COUNT'
+      },
+      {
+        Name: 'OLDEST_CONTACT_AGE',
+        Unit: 'SECONDS'
+      },
+      {
+        Name: 'SLOTS_ACTIVE',
+        Unit: 'COUNT'
+      },
+      {
+        Name: 'AGENTS_ON_CONTACT',
+        Unit: 'COUNT'
+      },
+      {
+        Name: 'AGENTS_NON_PRODUCTIVE',
+        Unit: 'COUNT'
+      }
+    ]
   }
 
   const command = new GetCurrentMetricDataCommand(input)
 
   try {
-    const response = await client.send(command)
-    console.log('response: ', response)
-    if (response.ApproximateTotalCount >= 1) {
-      response.MetricResults[0].Collections.forEach((element) => {
-        metrics.value.push({ name: element.Metric.Name, value: element.Value, unit: element.Metric.Unit })
-      })
-    } else {
-      metrics.value.push({
-        name: 'AGENTS_AVAILABLE',
-        unit: 'COUNT',
-        value: 0
-      },
-      {
-        name: 'CONTACTS_IN_QUEUE',
-        unit: 'COUNT',
-        value: 0
-      },
-      {
-        name: 'OLDEST_CONTACT_AGE',
-        unit: 'SECONDS',
-        value: 0
+    const GetCurrentMetricDataResponse = await client.send(command)
+    // console.log('GetCurrentMetricDataResponse: ', GetCurrentMetricDataResponse)
+    if (GetCurrentMetricDataResponse.ApproximateTotalCount >= 1) {
+      GetCurrentMetricDataResponse.MetricResults[0].Collections.forEach((element) => {
+        const metric = metrics.value.find((e) => element.Metric.Name === e.name)
+        metric.value = element.Value
       })
     }
   } catch (error) {

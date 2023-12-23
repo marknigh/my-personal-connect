@@ -1,5 +1,6 @@
 import { ConnectClient, ListQueuesCommand } from '@aws-sdk/client-connect'
 import { useInstanceStore } from 'src/stores/instance'
+
 async function getQueues (credentials) {
   const instanceStore = useInstanceStore()
 
@@ -25,7 +26,6 @@ async function getQueues (credentials) {
 
   try {
     const response = await client.send(command)
-    console.log('response: ', response)
     response.QueueSummaryList.forEach((queue) => {
       queues.push(queue)
     })

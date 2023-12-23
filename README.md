@@ -17,6 +17,7 @@ ROADMAP:
 * Custom Schedule. Add Holidays to front end and back end. New API for CRUD operations of holiday schedule. release 0.3.0
 * Add the ability to create/modify Quick Connects. 0.4.0
 * Real-Time Agent Status Dashboard. 0.6.0
+* Update the Real Time Metric Dashboard. 0.7.0
 * Contacts -> click row and get additional details.
 * Contacts -> add Customer Phone Number in list.
 * fix bug with only active call flows are getting returned. Routing->Call Flows.

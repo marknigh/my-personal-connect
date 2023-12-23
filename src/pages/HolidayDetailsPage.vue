@@ -26,7 +26,7 @@
           <q-btn color="primary" :label="editing ? 'update' : 'save'" @click="submitHoliday" />
         </div>
         <div class="q-mr-md">
-          <q-btn color="red" label="cancel" @click="cancel" />
+          <q-btn color="negative" label="cancel" @click="cancel" />
         </div>
       </div>
   </q-page>
