@@ -122,7 +122,7 @@ async function Abandonment () {
   })
 
   const input = { // GetMetricDataV2Request
-    EndTime: new Date(date.subtractFromDate(new Date(), { minute: 5 })), // required
+    EndTime: new Date(date.subtractFromDate(new Date(), { minute: 1 })), // required
     Filters: [
       {
         FilterKey: 'QUEUE',

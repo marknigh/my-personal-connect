@@ -32,6 +32,8 @@ export default boot(async (/* { app, router, ... } */) => {
         console.log('signOut from Hub Listen')
         break
       case 'signIn_failure':
+        console.log('signIn_failure from Hub Listen')
+        break
       case 'cognitoHostedUI_failure':
         console.log('Sign in failure', data)
         break

@@ -3,7 +3,7 @@
     <q-page-container v-if="!verification" class="flex flex-center">
         <q-toolbar>
           <q-toolbar-title>
-            <h3 class="text-center text-weight-thin">My Personal Amazon Connect</h3>
+            <h4 class="text-center text-weight-thin">My Personal Amazon Connect</h4>
           </q-toolbar-title>
         </q-toolbar>
           <q-card flat>
@@ -58,7 +58,7 @@
               <div class="col q-pt-sm"><q-separator/></div>
             </div>
 
-            <q-card-actions>
+            <q-card-actions class="justify-center">
               <google-login />
             </q-card-actions>
           </q-card>

@@ -1,9 +1,10 @@
 <template>
-    <q-btn color="red" class="full-width" label="Login with Google" @click="loginWithGoogle"/>
+  <q-btn class="btn-fixed-width" style="background-image: url('/src/assets/signInGoogle.png')" @click="loginWithGoogle" />
 </template>
 
 <script setup>
-import Auth, { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
+import { Auth } from 'aws-amplify'
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth'
 
 async function loginWithGoogle () {
   try {
@@ -15,5 +16,7 @@ async function loginWithGoogle () {
 </script>
 
 <style lang="scss" scoped>
-
+.btn-fixed-width {
+  width: 175px
+}
 </style>
