@@ -177,7 +177,7 @@ async function GetMetrics (queue) {
 
   try {
     const GetCurrentMetricDataResponse = await client.send(command)
-    // console.log('GetCurrentMetricDataResponse: ', GetCurrentMetricDataResponse)
+    console.log('GetCurrentMetricDataResponse: ', GetCurrentMetricDataResponse)
     if (GetCurrentMetricDataResponse.ApproximateTotalCount >= 1) {
       GetCurrentMetricDataResponse.MetricResults[0].Collections.forEach((element) => {
         const metric = metrics.value.find((e) => element.Metric.Name === e.name)

@@ -1,17 +1,15 @@
 <template>
-  <div class="col-6">
-    <q-card class="bg-transparent no-shadow no-border" bordered>
-      <q-card-section>
-        <v-chart
-          :option="option"
-          :resizable="true"
-          autoresize
-          style="height: 350px; width: auto"
-          :loading="loading"
-        />
-      </q-card-section>
-    </q-card>
-  </div>
+  <q-card class="bg-transparent no-shadow no-border" bordered>
+    <q-card-section>
+      <v-chart
+        :option="option"
+        :resizable="true"
+        autoresize
+        style="height: 350px; width: auto"
+        :loading="loading"
+      />
+    </q-card-section>
+  </q-card>
 </template>
 
 <script setup>
@@ -41,29 +39,37 @@ use([
   CanvasRenderer
 ])
 
+const props = defineProps(['queueId'])
 const creds = ref()
-const barChartData = ref([])
-const barChartColors = ref(['#25476A', '#03A9F4', '#AB47BC', '#9FCC2E', '#df5645', '#fa9f1b', '#9FCC2E', '#03a9f4'])
+const barChartColors = ref(['#25476a', '#AB47BC', '#26a69a', '#e1e7f0', '#9FCC2E', '#03a9f4'])
 const loading = ref(true)
 const dates = ref([])
+const barChartData = ref([])
 const option = ref(
   {
     title: {
-      text: 'Total Abandon',
-      subtext: 'Past 7 Days - All Queues',
+      text: 'Contacts Handled',
+      subtext: 'Past 7 Days',
       left: 'center'
     },
     color: barChartColors.value,
     legend: {},
     tooltip: {},
-    xAxis: {
-      type: 'category',
-      axisLabel: { interval: 0, rotate: 30 },
-      data: dates.value
+    grid: {
+      left: '2%',
+      // right: '2%',
+      // bottom: '2%',
+      containLabel: true
     },
     yAxis: {
-      minInterval: 1,
-      type: 'value'
+      type: 'category',
+      // axisLabel: { interval: 0, rotate: 0 },
+      data: dates.value
+    },
+    xAxis: {
+      // minInterval: 1,
+      type: 'value',
+      interval: 1
     },
     dataset: [
       {
@@ -73,13 +79,12 @@ const option = ref(
     series:
       {
         type: 'bar',
-        // data: barChartData.value,
-        borderColor: '#000',
         itemStyle: {
           color: (param) => {
             return barChartColors.value[param.value[1] % barChartColors.value.length]
           }
-        }
+        },
+        barWidth: '35%'
       }
   }
 )
@@ -88,29 +93,14 @@ onMounted(() => {
   try {
     Auth.currentCredentials().then(async (credentials) => {
       creds.value = credentials
-      Abandonment()
+      ContactsHandled()
     })
   } catch (error) {
     console.log('Error retrieving credentials: ', error)
   }
 })
 
-// function displayDates () {
-//   lastThreeDaysArray.value.forEach((element) => {
-//     displayDatesArray.value.push(element.toDateString())
-//   })
-// }
-
-// function getLastThreeDays () {
-//   lastThreeDaysArray.value.push(today.value)
-//   for (let i = 1; i < 5; i++) {
-//     lastThreeDaysArray.value.push(date.subtractFromDate(new Date(), { date: i }))
-//   }
-//   displayDates()
-// }
-
-async function Abandonment () {
-  // getLastThreeDays()
+async function ContactsHandled () {
   const credentials = {
     accessKeyId: creds.value.accessKeyId,
     secretAccessKey: creds.value.secretAccessKey,
@@ -123,11 +113,11 @@ async function Abandonment () {
   })
 
   const input = { // GetMetricDataV2Request
-    EndTime: new Date(date.subtractFromDate(new Date(), { minute: 1 })), // required
+    EndTime: new Date(date.subtractFromDate(new Date(), { minutes: 5 })), // required
     Filters: [
       {
         FilterKey: 'QUEUE',
-        FilterValues: ['0bff74d2-26c5-4e4f-b435-2c76f58a4f79', '5e0fa714-4f2c-432a-a4b6-1b42d44c6603', '65daffb8-6d9b-459d-8b5c-2e9b8f89f039']
+        FilterValues: [props.queueId]
       }
     ],
     Groupings: ['QUEUE'],
@@ -136,27 +126,34 @@ async function Abandonment () {
       TimeZone: 'UTC'
     },
     Metrics: [
-      { Name: 'CONTACTS_ABANDONED' }
+      { Name: 'CONTACTS_HANDLED' }
     ],
     ResourceArn: 'arn:aws:connect:us-east-1:844527799542:instance/b2f6e7d8-2ce4-4ce7-b641-88761ccb7b2e', // required
     StartTime: new Date(date.subtractFromDate(new Date(), { days: 7 })) // required
   }
   const command = new GetMetricDataV2Command(input)
   const GetMetricDataV2Response = await client.send(command)
-  console.log('CONTACTS_CREATED: ', GetMetricDataV2Response)
+  console.log('CONTACTS_HANDLED: ', GetMetricDataV2Response)
 
   // Get Dimension
   GetMetricDataV2Response.MetricResults.forEach((element) => {
-    dates.value.push(element.MetricInterval.StartTime.toDateString())
+    dates.value.push(date.formatDate(element.MetricInterval.EndTime, 'MMM Do, YYYY'))
     const rowData = []
-    rowData.push(element.MetricInterval.StartTime.toDateString(), element.Collections[0].Value)
+    rowData.push(date.formatDate(element.MetricInterval.EndTime, 'MMM Do, YYYY'), Math.round(element.Collections[0].Value))
     barChartData.value.push(rowData)
   })
   loading.value = false
+  if (barChartData.value.length === 0) {
+    option.value.title.subtext = 'No Data'
+    option.value.xAxis.show = false
+    option.value.yAxis.show = false
+  }
 }
-
 </script>
 
 <style scoped>
-
+.chart {
+  height: 50vh;
+  width: 50vh;
+}
 </style>

@@ -25,8 +25,8 @@ async function getQueues (credentials) {
   const command = new ListQueuesCommand(input)
 
   try {
-    const response = await client.send(command)
-    response.QueueSummaryList.forEach((queue) => {
+    const ListQueuesResponse = await client.send(command)
+    ListQueuesResponse.QueueSummaryList.forEach((queue) => {
       queues.push(queue)
     })
     return queues

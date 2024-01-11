@@ -12,6 +12,7 @@ const routes = [
       { path: '/calendarview', component: () => import('pages/CalendarViewPage.vue') },
       { path: '/hoursofoperations', component: () => import('pages/HoursOfOperationsPage.vue') },
       { path: '/queues', component: () => import('pages/QueueListPage.vue') },
+      { path: '/queue/analytics/:queueId', name: 'queue_analystics', component: () => import('pages/QueueAnalyticsPage.vue') },
       { path: '/listusers', component: () => import('pages/UserListPage.vue') },
       { path: '/metrics', component: () => import('pages/RealTimeMeticsPage.vue') },
       { path: '/routingprofiles', component: () => import('pages/RoutingProfileListPage.vue') },

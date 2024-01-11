@@ -31,7 +31,7 @@ function displayValue (metric) {
   let value = ''
   switch (metric.unit) {
     case 'SECONDS':
-      value = Math.round((metric.value / 1000))
+      value = displayTimer(Math.round(metric.value))
       break
     case 'COUNT':
       value = metric.value
@@ -41,6 +41,19 @@ function displayValue (metric) {
       break
   }
   return value
+}
+
+function displayTimer (timer) {
+  const hours = Math.floor(timer / 3600)
+  const minutes = Math.floor((timer % 3600) / 60)
+  const remainingSeconds = timer % 60
+  if (hours > 0) {
+    return `${hours}:${minutes}:${remainingSeconds}`
+  } else if (minutes > 1) {
+    return `${minutes}:${remainingSeconds}`
+  } else {
+    return `${remainingSeconds}`
+  }
 }
 </script>
 

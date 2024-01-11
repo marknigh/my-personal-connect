@@ -18,6 +18,8 @@ ROADMAP:
 * Add the ability to create/modify Quick Connects. 0.4.0
 * Real-Time Agent Status Dashboard. 0.6.0
 * Update the Real Time Metric Dashboard. 0.7.0
+* Update Queues with an icon to be redirected to 4 charts. 0.8.0
+* Update Users with an icon to be redirected to 4 charts with agent specific stats. 0.9.0
 * Contacts -> click row and get additional details.
 * Contacts -> add Customer Phone Number in list.
 * fix bug with only active call flows are getting returned. Routing->Call Flows.
