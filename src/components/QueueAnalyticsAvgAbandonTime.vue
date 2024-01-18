@@ -50,7 +50,7 @@ const option = ref(
     title: {
       text: 'Average Abandoned Time',
       subtext: 'Past 7 Days',
-      left: 'center'
+      bottom: 'center'
     },
     color: barChartColors.value,
     legend: {},

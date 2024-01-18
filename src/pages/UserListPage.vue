@@ -7,7 +7,8 @@
         </q-toolbar-title>
       </q-toolbar>
       <div style="min-width: 400px;">
-        <q-scroll-area style="height: 500px;"
+        <q-scroll-area
+          style="height: 500px;"
           :thumb-style="thumbStyle"
         >
           <q-list separator>
@@ -28,7 +29,7 @@
       <div class="col-5 row items-center">
         <div v-if="userDetails">
           <p class="no-margin text-h5 text-bold">
-            <q-icon size="sm" name="face" color="primary" />
+            <q-btn size="md" round flat color="primary" icon="o_query_stats" @click="AgentAnalytics(userDetails.Id)"/>
             {{ userDetails.IdentityInfo.FirstName }} {{ userDetails.IdentityInfo.LastName }}
           </p>
           <p class="no-margin text-subtitle1">
@@ -54,10 +55,12 @@
 import { ref, onMounted } from 'vue'
 import { Auth } from 'aws-amplify'
 import { ConnectClient, DescribeUserCommand, ListUsersCommand, UpdateUserRoutingProfileCommand } from '@aws-sdk/client-connect'
+import { useRouter } from 'vue-router'
 import { useInstanceStore } from '../stores/instance'
 import UserRoutingProfile from '../components/UserRoutingProfile.vue'
 
 const instanceStore = useInstanceStore()
+const router = useRouter()
 
 const creds = ref()
 const users = ref([])
@@ -102,6 +105,7 @@ async function GetUserList () {
 
   try {
     const response = await client.send(command)
+    console.log('ListUserCommand: ', response)
     response.UserSummaryList.forEach((element) => {
       users.value.push({ username: element.Username, id: element.Id })
     })
@@ -170,6 +174,9 @@ async function ChangeRoutingProfile (iD) {
   }
 }
 
+function AgentAnalytics (agentId) {
+  router.push({ name: 'user_analystics', params: { agentId } })
+}
 </script>
 
 <style lang="scss" scoped>

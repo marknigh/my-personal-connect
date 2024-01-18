@@ -34,7 +34,7 @@
 
           <div v-if="queueInfo">
             <p class="no-margin text-h5 text-bold">
-              <q-btn size="md" round flat color="primary" icon="o_analytics" @click="QueueAnalytics(queueInfo.QueueId)"/>
+              <q-btn size="md" round flat color="primary" icon="o_query_stats" @click="QueueAnalytics(queueInfo.QueueId)"/>
               {{ queueInfo.Name }}
               <q-badge
                 rounded

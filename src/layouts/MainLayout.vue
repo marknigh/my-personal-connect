@@ -168,7 +168,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable :to="{ path: '/listusers'}">
+        <q-item clickable :to="{ path: '/users'}">
           <q-item-section avatar>
             <q-icon color="primary" name="o_groups_2" />
           </q-item-section>
